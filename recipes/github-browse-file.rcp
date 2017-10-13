@@ -1,0 +1,4 @@
+(:name github-browse-file
+       :website "https://github.com/osener/github-browse-file"
+       :type github
+       :pkgname "osener/github-browse-file")

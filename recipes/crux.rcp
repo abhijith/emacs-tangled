@@ -1,0 +1,4 @@
+(:name crux
+       :website "https://github.com/bbatsov/crux"
+       :type github
+       :pkgname "bbatsov/crux")

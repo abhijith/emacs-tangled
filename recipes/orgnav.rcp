@@ -1,0 +1,4 @@
+(:name orgnav
+       :website "https://github.com/facetframer/orgnav"
+       :type github
+       :pkgname "facetframer/orgnav")

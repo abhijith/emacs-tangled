@@ -1,0 +1,4 @@
+(:name org-pdfview
+       :website "https://github.com/markus1189/org-pdfview"
+       :type github
+       :pkgname "markus1189/org-pdfview")

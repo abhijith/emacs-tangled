@@ -1,0 +1,4 @@
+(:name helm-descbinds
+	:type github
+	:pkgname "emacs-helm/helm-descbinds"
+	:description "Helm Describe bindings")

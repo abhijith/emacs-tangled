@@ -1,0 +1,5 @@
+(:name elfeed-goodies
+       :type github
+       :depends (noflet ace-jump-mode)
+       :pkgname "algernon/elfeed-goodies"
+       :description "Elfeed goodies")

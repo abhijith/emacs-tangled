@@ -1,0 +1,4 @@
+(:name xml-plus
+       :website "https://github.com/bddean/xml-plus"
+       :type github
+       :pkgname "bddean/xml-plus")

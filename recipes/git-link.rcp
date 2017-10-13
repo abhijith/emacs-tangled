@@ -1,0 +1,4 @@
+(:name git-link
+       :type github
+       :pkgname "sshaw/git-link"
+       :depends helm)

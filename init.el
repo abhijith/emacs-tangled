@@ -6,6 +6,9 @@
 (defvar my-org-file (expand-file-name "emacs-init.org" user-emacs-directory)
   "All configurations tangled from this file.")
 
+(when (file-exists-p my-init-file)
+  (delete-file my-init-file))
+
 (if (file-exists-p my-init-file)
     (load-file my-init-file)
   (progn

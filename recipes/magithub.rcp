@@ -1,0 +1,4 @@
+(:name magithub
+       :website "https://github.com/vermiculus/magithub"
+       :type github
+       :pkgname "vermiculus/magithub")

@@ -1,0 +1,6 @@
+(:name sayid
+       :website "http://github.com/bpiel/sayid"
+       :description "Sayid"
+       :type http
+       :url "https://raw.githubusercontent.com/bpiel/sayid/master/src/el/sayid.el"
+       :depends (cider sayid-mode))

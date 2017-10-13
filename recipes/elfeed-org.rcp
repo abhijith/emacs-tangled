@@ -1,0 +1,4 @@
+(:name elfeed-org
+       :type github
+       :pkgname "remyhonig/elfeed-org"
+       :description "Elfeed Org mode")

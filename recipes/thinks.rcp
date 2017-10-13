@@ -1,0 +1,4 @@
+(:name thinks
+       :type http
+       :url "http://www.davep.org/emacs/thinks.el"
+       :pkgname "thinks")

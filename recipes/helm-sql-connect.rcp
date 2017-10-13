@@ -1,0 +1,4 @@
+(:name helm-sql-connect
+       :type github
+       :pkgname "eric-hansen/helm-sql-connect"
+       :depends helm)

@@ -1,0 +1,4 @@
+(:name helm-org-rifle
+       :type github
+       :pkgname "alphapapa/helm-org-rifle"
+       :depends helm)

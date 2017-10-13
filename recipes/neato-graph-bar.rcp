@@ -1,0 +1,3 @@
+(:name neato-graph-bar
+       :type elpa
+       :pkgname "neato-graph-bar")

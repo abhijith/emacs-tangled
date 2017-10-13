@@ -1,0 +1,4 @@
+(:name justify-kp
+       :website "https://github.com/Fuco1/justify-kp"
+       :type github
+       :pkgname "Fuco1/justify-kp")

@@ -1,0 +1,5 @@
+(:name circleci
+       :category "project"
+       :type github
+       :checkout "master"
+       :pkgname "technomancy/circleci.el")

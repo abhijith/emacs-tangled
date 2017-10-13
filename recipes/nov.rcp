@@ -1,0 +1,4 @@
+(:name nov
+       :website "https://github.com/wasamasa/nov.el"
+       :type github
+       :pkgname "wasamasa/nov.el")

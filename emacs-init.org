@@ -26,10 +26,12 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
     (goto-char (point-max))
     (eval-print-last-sexp)))
+(add-to-list 'el-get-recipe-path "~/.emacs.d/recipes")
+(add-to-list 'load-path "~/.emacs.d/el-get/elfeed")
 (el-get 'sync)
 #+END_SRC
 * libraries
-** package managment
+** use-package
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle use-package)
 #+END_SRC
@@ -43,7 +45,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 (el-get-bundle tablist)
 (el-get-bundle alert)
 (el-get-bundle ctable)
-(el-get-bundle bddean/xml-plus)
+(el-get-bundle xml-plus)
 (el-get-bundle esxml)
 (el-get-bundle oauth2)
 
@@ -53,7 +55,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 * meta
 ** no-littering
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle tarsius/no-littering)
+(el-get-bundle no-littering)
 (use-package no-littering
   :init
   (require 'no-littering)
@@ -71,7 +73,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
       kept-old-versions 0
       delete-old-versions t)
 #+END_SRC
-** os-specific
+** keyboard
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq ns-function-modifier 'control
       x-select-enable-clipboard t
@@ -144,7 +146,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
     (setq guide-key/guide-key-sequence
           `("C-c" "C-x" "C-M" "C-c p" "C-h"))))
 #+END_SRC
-** keybindings
+** help
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle emacs-helm/helm-descbinds)
 #+END_SRC
@@ -169,12 +171,9 @@ Disable all fancy windowing components
 #+END_SRC
 ** theme
 #+BEGIN_SRC emacs-lisp :tangle yes
+(set-frame-font "Inconsolata 14" nil t)
 (setq font-lock-maximum-decoration t)
 (load-file "~/.emacs.d/theme-eink.el")
-#+END_SRC
-** font
-#+BEGIN_SRC emacs-lisp :tangle yes
-(set-frame-font "Inconsolata 14" nil t)
 #+END_SRC
 ** ace-window
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -278,7 +277,7 @@ Workspaces using perspective
 #+END_SRC
 ** crux
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle bbatsov/crux)
+(el-get-bundle crux)
 (use-package crux
   :bind (("C-a" . crux-move-beginning-of-line)))
 #+END_SRC
@@ -383,8 +382,8 @@ Workspaces using perspective
 #+END_SRC
 ** epub
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle wasamasa/nov.el)
-(el-get-bundle Fuco1/justify-kp)
+(el-get-bundle nov)
+(el-get-bundle justify-kp)
 (use-package nov
   :init
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
@@ -799,10 +798,11 @@ Workspaces using perspective
 #+END_SRC
 ** projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle projectile)
+(el-get-bundle helm-projectile)
 (use-package helm-projectile)
 (use-package projectile
   :init
-  ;(projectile-global-mode)
   (helm-projectile-on)
   :defer (projectile-cleanup-known-projects)
   :diminish projectile-mode
@@ -908,14 +908,13 @@ Workspaces using perspective
     (interactive "cSend region to Gist?: (y/n) ")
     (if (equal answer ?\y) (gist-region (region-beginning) (region-end)))))
 
-(el-get-bundle sshaw/git-link)
-(el-get-bundle osener/github-browse-file)
-(el-get-bundle dgtized/github-clone.el)
+(el-get-bundle git-link)
+(el-get-bundle github-browse-file)
+(el-get-bundle github-clone)
 #+END_SRC
-
 ** circleci
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle technomancy/circleci.el)
+(el-get-bundle circleci)
 (use-package circleci
   :init
   (autoload 'circleci "circleci" "Show CI build output" t))
@@ -1089,9 +1088,9 @@ Workspaces using perspective
 #+END_SRC
 ** elfeed
 #+BEGIN_SRC emacs-lisp :tangle yes
-(add-to-list 'load-path "~/.emacs.d/el-get/elfeed")
 (el-get-bundle elfeed)
-(el-get-bundle remyhonig/elfeed-org)
+(add-to-list 'load-path "/home/icylisper/.emacs.d/el-get/elfeed")
+(el-get-bundle elfeed-org)
 (defvar elfeed-show-switch-function #'switch-to-buffer)
 (defun elfeed-show-find-window ()
   (cl-loop for window in (window-list)

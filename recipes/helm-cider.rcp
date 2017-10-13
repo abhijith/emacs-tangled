@@ -1,0 +1,6 @@
+(:name helm-cider
+       :category "project"
+       :description "Emacs autocomplete client for cider"
+       :type github
+       :checkout "master"
+       :pkgname "clojure-emacs/helm-cider")

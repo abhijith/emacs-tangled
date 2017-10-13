@@ -1,0 +1,6 @@
+(:name github-clone
+       :website "https://github.com/dgtized/github-clone.el"
+       :type github
+       :depends (gh)
+       :submodule nil
+       :pkgname "dgtized/github-clone.el")

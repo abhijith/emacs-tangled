@@ -1,0 +1,6 @@
+(:name magit-gh-issues
+       :description "Github Issues Browser"
+       :type github
+       :pkgname "creichert/magit-gh-issues"
+       :depends (gh)
+       :autoloads nil)

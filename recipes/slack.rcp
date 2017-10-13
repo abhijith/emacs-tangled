@@ -1,0 +1,4 @@
+(:name slack
+       :website "https://github.com/yuya373/emacs-slack"
+       :type github
+       :pkgname "yuya373/emacs-slack")

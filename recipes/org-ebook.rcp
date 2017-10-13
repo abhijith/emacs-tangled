@@ -1,0 +1,4 @@
+(:name org-ebook
+       :type http
+       :url "https://raw.githubusercontent.com/bddean/emacs-ereader/master/org-ebook.el"
+       :pkgname "org-ebook")

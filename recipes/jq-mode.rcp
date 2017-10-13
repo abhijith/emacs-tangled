@@ -1,0 +1,4 @@
+(:name jq-mode
+       :website "https://github.com/ljos/jq-mode"
+       :type github
+       :pkgname "ljos/jq-mode")
