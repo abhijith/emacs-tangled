@@ -47,7 +47,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 * meta
 ** no-littering
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle no-littering)
+(el-get-bundle tarsius/no-littering)
 (use-package no-littering
   :init
   (require 'no-littering)
@@ -140,7 +140,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 #+END_SRC
 ** keybindings
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle helm-descbinds)
+(el-get-bundle emacs-helm/helm-descbinds)
 #+END_SRC
 * window
 ** no-bells-and-whistles
@@ -273,6 +273,12 @@ Workspaces using perspective
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle adaptive-wrap)
 #+END_SRC
+** crux
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle bbatsov/crux)
+(use-package crux
+  :bind (("C-a" . crux-move-beginning-of-line)))
+#+END_SRC
 * dired
 ** wdired
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -359,7 +365,7 @@ Workspaces using perspective
 ** json
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle js2-mode)
-(el-get-bundle jq-mode)
+(el-get-bundle ljos/jq-mode)
 (use-package jq-mode
   :init
   (autoload 'jq-mode "jq-mode.el" "Major mode for editing jq files" t)
@@ -414,8 +420,8 @@ Workspaces using perspective
 #+END_SRC
 ** epub
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle nov)
-(el-get-bundle justify-kp)
+(el-get-bundle wasamasa/nov.el)
+(el-get-bundle Fuco1/justify-kp)
 (use-package nov
   :init
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
@@ -430,7 +436,6 @@ Workspaces using perspective
 ** dot
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle graphviz-dot-mode)
-
 #+END_SRC
 ** yaml
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -540,6 +545,7 @@ Workspaces using perspective
 ** cider
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle clojure-emacs/cider :checkout "v0.15.0")
+(el-get-bundle clojure-emacs/helm-cider)
 (use-package cider
   :init
   (setq nrepl-hide-special-buffers nil
@@ -808,8 +814,9 @@ Workspaces using perspective
 #+END_SRC
 ** org-links
 #+BEGIN_SRC emacs-lisp
-(el-get-bundle org-pdfview)
-(el-get-bundle org-ebook)
+(el-get-bundle markus1189/org-pdfview)
+(el-get-bundle org-ebook
+  :url "https://raw.githubusercontent.com/bddean/emacs-ereader/master/org-ebook.el")
 (add-to-list 'org-file-apps
 	     '(("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))
 	       ("\\.epub\\'" . (lambda (file link) (org-ebook-open link)))))
@@ -936,12 +943,12 @@ Workspaces using perspective
     (interactive "cSend region to Gist?: (y/n) ")
     (if (equal answer ?\y) (gist-region (region-beginning) (region-end)))))
 
-(el-get-bundle git-link)
+(el-get-bundle sshaw/git-link)
 (el-get-bundle osener/github-browse-file)
 #+END_SRC
 ** circleci
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle circleci)
+(el-get-bundle technomancy/circleci.el)
 (use-package circleci
   :init
   (autoload 'circleci "circleci" "Show CI build output" t))
@@ -1083,7 +1090,7 @@ Workspaces using perspective
 #+END_SRC
 ** sql
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle helm-sql-connect)
+(el-get-bundle eric-hansen/helm-sql-connect)
 #+END_SRC
 * web
 ** eww
