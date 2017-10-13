@@ -72,24 +72,6 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
       echo-keystrokes 0.1
       directory-sep-char ?/)
 #+END_SRC
-** prog-defaults
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq fill-column 80
-      next-line-add-newlines nil
-      require-final-newline nil
-      truncate-partial-width-windows nil
-      sentence-end-double-space nil
-      indent-tabs-mode nil
-      enable-local-variables nil)
-(add-hook 'prog-mode-hook
-	  (lambda ()
-	    (font-lock-add-keywords
-	     nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
-		    1 font-lock-warning-face t)))))
-(auto-revert-mode 1)
-(add-hook 'after-save-hook
-	  'executable-make-buffer-file-executable-if-script-p)
-#+END_SRC
 ** completion-system
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle helm)
@@ -195,7 +177,20 @@ Disable all fancy windowing components
   (bind-key "C-x o" 'ace-window))
 #+END_SRC
 ** windmove
-
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package windmove
+  :config
+  (windmove-default-keybindings 'shift)
+  (setq windmove-wrap-around t)
+  (bind-key [S-right] 'windmove-right)
+  (bind-key [S-left]  'windmove-left)
+  (bind-key [S-up] 'windmove-up)
+  (bind-key [S-down]  'windmove-down)
+  (define-key org-mode-map [S-right] 'windmove-right)
+  (define-key org-mode-map [S-left]  'windmove-left)
+  (define-key org-mode-map [S-up] 'windmove-up)
+  (define-key org-mode-map [S-down]  'windmove-down))
+#+END_SRC
 ** perspective
 Workspaces using perspective
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -211,6 +206,24 @@ Workspaces using perspective
   (bind-key [s-left] 'persp-prev))
 #+END_SRC
 * buffer
+** prog-defaults
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq fill-column 80
+      next-line-add-newlines nil
+      require-final-newline nil
+      truncate-partial-width-windows nil
+      sentence-end-double-space nil
+      indent-tabs-mode nil
+      enable-local-variables nil)
+(add-hook 'prog-mode-hook
+	  (lambda ()
+	    (font-lock-add-keywords
+	     nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
+		    1 font-lock-warning-face t)))))
+(auto-revert-mode 1)
+(add-hook 'after-save-hook
+	  'executable-make-buffer-file-executable-if-script-p)
+#+END_SRC
 ** undo-tree
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle undo-tree)
@@ -324,6 +337,23 @@ Workspaces using perspective
         dired-omit-mode t)
   (add-hook 'dired-after-readin-hook #'highline-mode-on)
   (add-hook 'dired-mode-hook #'highline-mode-on))
+#+END_SRC
+** dired-kill
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun dired-kill-buffers ()
+  (interactive)
+  (mapc (lambda (buffer)
+          (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
+            (kill-buffer buffer)))
+        (buffer-list)))
+#+END_SRC
+** dired-ranger
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package dired-ranger
+  :bind (:map dired-mode-map
+	      ("W" . dired-ranger-copy)
+	      ("X" . dired-ranger-move)
+	      ("Y" . dired-ranger-paste)))
 #+END_SRC
 * format
 ** json
@@ -786,7 +816,136 @@ Workspaces using perspective
 (add-hook 'pdf-view-mode-hook #'(lambda () (require 'org-pdfview)))
 #+END_SRC
 * project
+** vc
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package vc
+  :config
+  (setq vc-mistrust-permissions t
+	version-control t
+        vc-initial-comment t
+        vc-consult-headers nil
+        vc-make-backup-files t))
+#+END_SRC
+** projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-projectile)
+(use-package projectile
+  :init
+  (projectile-global-mode)
+  (helm-projectile-on)
+  :defer (projectile-cleanup-known-projects)
+  :diminish projectile-mode
+  :config
+  (setq projectile-switch-project-action 'helm-projectile-find-file
+	projectile-find-dir-includes-top-level t
+	projectile-remember-window-configs t
+	projectile-keymap-prefix (kbd "C-c p")
+	projectile-completion-system 'helm
+	projectile-indexing-method 'alien
+	projectile-enable-caching t
+	projectile-require-project-root t
+	projectile-mode-line '(:eval (format " (%s)" (projectile-project-name)))
+	projectile-sort-order 'modification-time
+	helm-ff-skip-boring-files t
+        helm-ff-search-library-in-sexp nil
+        helm-ff-file-name-history-use-recentf nil)
+  :bind (("C-c a" . helm-git-grep)
+         ("C-c f" . helm-projectile-find-file)
+  	 ("C-c D" . projectile-dired)
+         ("C-c !" . projectile-run-command-in-root)
+	 ("C-c RET" . projectile-run-shell)
+         ("C-c t" . projectile-find-test-file)
+  	 ("C-c b" . helm-projectile-switch-to-buffer)
+	 ("C-x p" . projectile-switch-project)))
+#+END_SRC
+** ffip
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun ffip-create-pattern-file-finder (&rest patterns)
+  (lexical-let ((patterns patterns))
+    (lambda ()
+      (interactive)
+      (let ((ffip-patterns patterns))
+        (find-file-in-project)))))
 
+(use-package find-file-in-project
+  :init
+  (bind-key "C-c c" (ffip-create-pattern-file-finder "*.clj")))
+#+END_SRC
+** git-modeline
+** diff-hl
+** magit
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle magit)
+(use-package magit
+  :init
+  (progn
+    (require 'gh)
+    (require 'gh-users)
+    (add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode)))
+  :config
+  (setq magit-auto-revert-mode 1
+	magit-last-seen-setup-instructions "1.4.0"
+	diff-switches "-u"
+	magit-push-always-verify nil
+	magit-git-executable "git"
+	magit-save-repository-buffers 'dontask
+	magit-default-tracking-name-function #'magit-default-tracking-name-branch-only)
+  (add-hook 'magit-mode-hook #'highline-mode-on)
+  :bind
+  (("C-c m" . magit-status)
+   ("C-c l" . magit-log-buffer-file)
+   ("C-c L" . magit-log-head)
+   ("C-c o" . magit-checkout)
+   ("C-c d" . magit-diff-buffer-file)
+   ("C-c D" . magit-diff)))
+
+(defun magit-ignore-whitespace ()
+  "Ignore whitespace."
+  (interactive)
+  (add-to-list 'magit-diff-options "-w")
+  (magit-refresh))
+
+(defun magit-dont-ignore-whitespace ()
+  "Don't ignore whitespace."
+  (interactive)
+  (setq magit-diff-options (remove "-w" magit-diff-options))
+  (magit-refresh))
+
+(defun magit-toggle-whitespace ()
+  "Toggle whitespace."
+  (interactive)
+  (if (member "-w" magit-diff-options)
+      (magit-dont-ignore-whitespace)
+    (magit-ignore-whitespace)))
+#+END_SRC
+** magit-identities
+** magit-filenotify
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle magit-filenotify)
+(use-package magit-filenotify
+  :config
+  (add-hook 'magit-status-mode-hook 'magit-filenotify-mode))
+#+END_SRC
+** github
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle gist)
+(use-package gist
+  :ensure t
+  :init
+  (defun send-to-gist (answer)
+    (interactive "cSend region to Gist?: (y/n) ")
+    (if (equal answer ?\y) (gist-region (region-beginning) (region-end)))))
+
+(el-get-bundle git-link)
+(el-get-bundle osener/github-browse-file)
+#+END_SRC
+** circleci
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle circleci)
+(use-package circleci
+  :init
+  (autoload 'circleci "circleci" "Show CI build output" t))
+#+END_SRC
 * rust
 ** rust-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -901,6 +1060,10 @@ Workspaces using perspective
 	      (shell-dirtrack-mode t)
 	      (setq dirtrackp nil))))
 #+END_SRC
+** helm-sys
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-sys)
+#+END_SRC
 ** tramp
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tramp
@@ -917,6 +1080,10 @@ Workspaces using perspective
     (add-to-list 'tramp-default-proxies-alist
 		  '((regexp-quote (system-name)) nil nil))))
 
+#+END_SRC
+** sql
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm-sql-connect)
 #+END_SRC
 * web
 ** eww
@@ -950,6 +1117,7 @@ Workspaces using perspective
 #+END_SRC
 ** elfeed
 #+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'load-path "~/.emacs.d/el-get/elfeed")
 (el-get-bundle elfeed)
 (el-get-bundle elfeed-org)
 (defvar elfeed-show-switch-function #'switch-to-buffer)
@@ -1014,7 +1182,6 @@ Workspaces using perspective
 	elfeed-sort-order 'descending
 	rmh-elfeed-org-files '("~/src/org/elfeed.org")))
 #+END_SRC
-** wikipedia
 ** dictionary
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle dictionary)
@@ -1099,7 +1266,45 @@ Workspaces using perspective
                 (cdr (assoc x (helm-jabber-online-contacts))))))))
 #+END_SRC
 ** slack
+(el-get-bundle slack)
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package slack
+  :commands (slack-start)
+  :init
+  (setq slack-buffer-emojify nil
+	slack-prefer-current-team t
+	lui-prompt-string "=> "
+	slack-buffer-function #'switch-to-buffer
+	slack-prefer-current-team t
+	slack-display-team-name nil))
+(use-package alert
+  :commands (alert)
+  :init
+  (setq alert-default-style 'notifier))
+#+END_SRC
 ** erc
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle erc)
+(el-get-bundle erc-extras)
+(use-package erc
+  :config
+  (setq erc-auto-query 'frame
+	erc-buffer-activity-timeout 0
+	erc-hide-list '("JOIN" "PART" "QUIT")
+	erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT")
+	erc-track-position-in-mode-line t
+	erc-kill-buffer-on-part t
+	erc-fill-static-center 20
+	erc-fill-function 'erc-fill-static
+	erc-hide-list '("JOIN" "NICK" "PART" "QUIT")
+	erc-max-buffer-size 30000
+	erc-autojoin-channels-alist '(("freenode.net" "#emacs" "#clojure"))))
+
+(defun irc ()
+  (interactive)
+  (erc :server "irc.freenode.net"
+       :port 6667))
+#+END_SRC
 ** restclient
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle restclient)
