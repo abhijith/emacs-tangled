@@ -790,7 +790,7 @@ Workspaces using perspective
 #+END_SRC
 ** org-rifle
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle helm-org-rifle)
+(el-get-bundle alphapapa/helm-org-rifle)
 (use-package helm-org-rifle
   :init
   (setq org-refile-targets '((nil :level . 1)
@@ -806,7 +806,7 @@ Workspaces using perspective
 #+END_SRC
 ** org-nav
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle orgnav)
+(el-get-bundle facetframer/orgnav)
 (use-package orgnav
   :init
   (progn
