@@ -12,6 +12,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 * debugging
 #+BEGIN_SRC emacs-lisp :tangle yes
 (toggle-debug-on-error nil)
+(toggle-debug-on-error nil)
 #+END_SRC
 * el-get
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -169,6 +170,7 @@ Disable all fancy windowing components
 ** theme
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq font-lock-maximum-decoration t)
+(load-file "~/.emacs.d/theme-eink.el")
 #+END_SRC
 ** font
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -800,7 +802,7 @@ Workspaces using perspective
 (use-package helm-projectile)
 (use-package projectile
   :init
-  (projectile-global-mode)
+  ;(projectile-global-mode)
   (helm-projectile-on)
   :defer (projectile-cleanup-known-projects)
   :diminish projectile-mode
