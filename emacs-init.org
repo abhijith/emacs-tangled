@@ -4,23 +4,30 @@
 * about
 This file is tangled using =org-babel-load-file=. What this does is
 generate a =emacs-init.el= from the =emacs-lisp= source blocks.
+* dependencies
+  #+BEGIN_SRC bash
+   curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
+   sudo apt-get install libpng-dev libz-dev libpoppler-glib-dev libpoppler-private-dev
+  #+END_SRC
+* debugging
+#+BEGIN_SRC emacs-lisp :tangle yes
+(toggle-debug-on-error nil)
+#+END_SRC
 * el-get
 #+BEGIN_SRC emacs-lisp :tangle yes
+(package-initialize)
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'load-path "~/.emacs.d/el-get")
 (require 'cl)
-(toggle-debug-on-error nil)
-(toggle-debug-on-error nil)
-
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
     (goto-char (point-max))
     (eval-print-last-sexp)))
-
-(add-to-list 'el-get-recipe-path "~/.emacs.d/recipes")
 (el-get 'sync)
+
+(add-to-list 'exec-path "/home/icylisper/.cask/bin")
 #+END_SRC
 * libraries
 ** package managment
@@ -37,7 +44,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 (el-get-bundle tablist)
 (el-get-bundle alert)
 (el-get-bundle ctable)
-(el-get-bundle xml-plus)
+(el-get-bundle bddean/xml-plus)
 (el-get-bundle esxml)
 (el-get-bundle oauth2)
 
@@ -185,11 +192,7 @@ Disable all fancy windowing components
   (bind-key [S-right] 'windmove-right)
   (bind-key [S-left]  'windmove-left)
   (bind-key [S-up] 'windmove-up)
-  (bind-key [S-down]  'windmove-down)
-  (define-key org-mode-map [S-right] 'windmove-right)
-  (define-key org-mode-map [S-left]  'windmove-left)
-  (define-key org-mode-map [S-up] 'windmove-up)
-  (define-key org-mode-map [S-down]  'windmove-down))
+  (bind-key [S-down]  'windmove-down))
 #+END_SRC
 ** perspective
 Workspaces using perspective
@@ -374,49 +377,9 @@ Workspaces using perspective
   (with-eval-after-load "json-mode"
     (define-key json-mode-map (kbd "C-c C-j") #'jq-interactively)))
 #+END_SRC
-** csv
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle csv-mode)
-#+END_SRC
 ** toml
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle toml-mode)
-#+END_SRC
-** pdf
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle pdf-tools)
-(use-package pdf-tools
-  :config
-  (pdf-tools-install)
-  (require 'org-pdfview)
-  (bind-keys :map pdf-view-mode-map
-	      ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
-	      ("g"  . pdf-view-first-page)
-	      ("G"  . pdf-view-last-page)
-	      ("l"  . image-forward-hscroll)
-	      ("h"  . image-backward-hscroll)
-	      ("j"  . pdf-view-next-page)
-	      ("k"  . pdf-view-previous-page)
-	      ("e"  . pdf-view-goto-page)
-	      ("u"  . pdf-view-revert-buffer)
-	      ("al" . pdf-annot-list-annotations)
-	      ("ad" . pdf-annot-delete)
-	      ("aa" . pdf-annot-attachment-dired)
-	      ("am" . pdf-annot-add-markup-annotation)
-	      ("at" . pdf-annot-add-text-annotation)
-	      ("y"  . pdf-view-kill-ring-save)
-	      ("i"  . pdf-misc-display-metadata)
-	      ("s"  . pdf-occur)
-	      ("b"  . pdf-view-set-slice-from-bounding-box)
-	      ("r"  . pdf-view-reset-slice)))
-
-(use-package pdf-view
-  :config
-  (setq-default pdf-view-display-size 'fit-page)
-  (add-hook 'pdf-view-mode-hook #'pdf-view-fit-page-to-window)
-  (setq-default pdf-view-display-size 'fit-page)
-  (setq pdf-view-resize-factor 1.10
-	doc-view-resolution 200))
 #+END_SRC
 ** epub
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -590,7 +553,7 @@ Workspaces using perspective
 	 ("M-p"    . cider-repl-previous-input)))
 
 (add-to-list 'load-path "~/.emacs.d/el-get/helm-cider")
-(use-package :helm-cider
+(use-package helm-cider
   :init
   (require 'helm-cider-spec)
   (load "helm-cider-repl.el")
@@ -636,7 +599,7 @@ Workspaces using perspective
   (add-hook 'racket-mode-hook #'enable-paredit-mode)
   (add-hook 'racket-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'racket-repl-mode-hook #'enable-paredit-mode)
-  (add-hook 'racket-repl-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'racket-repl-mode-hook 'rainbow-delimiters-mode))
 #+END_SRC
 ** emacs-lisp
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -682,6 +645,7 @@ Workspaces using perspective
 * modeline
 ** smart-mode-line
 #+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle smart-mode-line)
 (use-package smart-mode-line
   :init
   (sml/setup)
@@ -883,6 +847,7 @@ Workspaces using perspective
 ** magit
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle magit)
+(el-get-bundle gh)
 (use-package magit
   :init
   (progn
@@ -945,7 +910,9 @@ Workspaces using perspective
 
 (el-get-bundle sshaw/git-link)
 (el-get-bundle osener/github-browse-file)
+(el-get-bundle dgtized/github-clone.el)
 #+END_SRC
+
 ** circleci
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle technomancy/circleci.el)
@@ -962,8 +929,6 @@ Workspaces using perspective
 
 (use-package rust-mode
   :mode ("\\.rs$" . rust-mode)
-  :init
-  (global-company-mode)
   :config
   (progn
     (setq compile-command "cargo run")
@@ -1126,7 +1091,7 @@ Workspaces using perspective
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'load-path "~/.emacs.d/el-get/elfeed")
 (el-get-bundle elfeed)
-(el-get-bundle elfeed-org)
+(el-get-bundle remyhonig/elfeed-org)
 (defvar elfeed-show-switch-function #'switch-to-buffer)
 (defun elfeed-show-find-window ()
   (cl-loop for window in (window-list)
@@ -1273,7 +1238,7 @@ Workspaces using perspective
                 (cdr (assoc x (helm-jabber-online-contacts))))))))
 #+END_SRC
 ** slack
-(el-get-bundle slack)
+(el-get-bundle yuya373/emacs-slack)
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package slack
   :commands (slack-start)
@@ -1319,3 +1284,12 @@ Workspaces using perspective
   :mode ("\\.http\\'" . restclient-mode))
 #+END_SRC
 ** mu4e
+* secrets
+** load-priv-file
+#+BEGIN_SRC emacs-lisp  :tangle yes
+(defun load-if-exists (file)
+  (when (file-exists-p file)
+    (load-file file)))
+(load-if-exists "~/.emacs.d/priv.el")
+#+END_SRC
+
