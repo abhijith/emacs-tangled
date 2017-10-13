@@ -1,0 +1,1109 @@
+#+AUTHOR: icylisper
+#+TITLE: Tangled Emacs Configuration
+
+* about
+This file is tangled using =org-babel-load-file=. What this does is
+generate a =emacs-init.el= from the =emacs-lisp= source blocks.
+* el-get
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(add-to-list 'load-path "~/.emacs.d/el-get")
+(require 'cl)
+(toggle-debug-on-error nil)
+(toggle-debug-on-error nil)
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(add-to-list 'el-get-recipe-path "~/.emacs.d/recipes")
+(el-get 'sync)
+#+END_SRC
+* libraries
+** package managment
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle use-package)
+#+END_SRC
+** elisp-lib
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle s)
+(el-get-bundle f)
+(el-get-bundle popup)
+(el-get-bundle epc)
+(el-get-bundle hydra)
+(el-get-bundle tablist)
+(el-get-bundle alert)
+(el-get-bundle ctable)
+(el-get-bundle xml-plus)
+(el-get-bundle esxml)
+(el-get-bundle oauth2)
+
+(use-package queue
+  :ensure t)
+#+END_SRC
+* meta
+** no-littering
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle no-littering)
+(use-package no-littering
+  :init
+  (require 'no-littering)
+  :config
+  (setq no-littering-etc-directory (expand-file-name "config/" user-emacs-directory)
+	no-littering-var-directory (expand-file-name "data/" user-emacs-directory)))
+#+END_SRC
+** backups
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq backup-directory-alist '((".*" . "/tmp/"))
+      auto-save-file-name-transforms '((".*" "/tmp/" t))
+      backup-by-copying t
+      confirm-nonexistent-file-or-buffer nil
+      kept-new-versions 0
+      kept-old-versions 0
+      delete-old-versions t)
+#+END_SRC
+** os-specific
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq ns-function-modifier 'control
+      x-select-enable-clipboard t
+      echo-keystrokes 0.1
+      directory-sep-char ?/)
+#+END_SRC
+** prog-defaults
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq fill-column 80
+      next-line-add-newlines nil
+      require-final-newline nil
+      truncate-partial-width-windows nil
+      sentence-end-double-space nil
+      indent-tabs-mode nil
+      enable-local-variables nil)
+(add-hook 'prog-mode-hook
+	  (lambda ()
+	    (font-lock-add-keywords
+	     nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
+		    1 font-lock-warning-face t)))))
+(auto-revert-mode 1)
+(add-hook 'after-save-hook
+	  'executable-make-buffer-file-executable-if-script-p)
+#+END_SRC
+** completion-system
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm)
+(use-package helm
+  :init
+  (create-file-buffer "*helm*")
+  (helm-autoresize-mode 1)
+  :config
+  (add-hook 'helm-buffer-mode-hook #'(lambda () (interactive) (highline-mode 1)))
+  (setq helm-mode-fuzzy-match t
+	helm-semantic-fuzzy-match t
+	helm-imenu-fuzzy-match t
+	helm-buffers-fuzzy-matching t
+	helm-recentf-fuzzy-match  nil
+	helm-echo-input-in-header-line nil
+	helm-ff-file-name-history-use-recentf nil
+	helm-mini-default-sources '(helm-source-buffers-list
+				    ,(if (projectile-project-p)
+					     helm-source-projectile-files-list))
+	helm-bookmark-show-location nil
+	helm-echo-input-in-header-line nil
+	helm-ff-file-name-history-use-recentf nil
+	helm-mini-default-sources '(helm-source-buffers-list)
+	helm-bookmark-show-location nil
+	helm-autoresize-max-height 30
+	helm-autoresize-min-height 20
+	helm-split-window-in-side-p t
+	helm-split-window-default-side 'below
+	helm-display-header-line nil)
+  :bind (("C-c j" . helm-imenu)
+	 ("C-x b" . helm-mini)
+	 ("M-y"   . helm-show-kill-ring)))
+(advice-add 'helm-skip-boring-buffers :filter-return 'filter-dired-buffers)
+
+(with-eval-after-load 'helm-buffers
+  (setq helm-boring-buffer-regexp-list
+	'("*!dired"
+	  "\\*helm-mode-switch-to-buffer*"
+	  "\\*Backtrace"
+	  "\\*Completions"
+	  "\\*Help"
+	  "\\*Shell Command Output"
+	  "\\*Flycheck error message"
+	  "\\*Compile-Log"
+	  "\\*magit"
+	  "\\*guide"
+	  "\\*helm"
+	  "\\*Echo"
+	  "\\*code"
+	  "\\*scratch"
+	  "\\*Mini")))
+
+#+END_SRC
+** guide-key
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle guide-key)
+(use-package guide-key
+  :init (guide-key-mode 1)
+  :config
+  (progn
+    (setq guide-key/idle-delay 1)
+    (setq guide-key/recursive-key-sequence-flag t)
+    (setq guide-key/popup-window-position 'bottom)
+    (setq guide-key/guide-key-sequence
+          `("C-c" "C-x" "C-M" "C-c p" "C-h"))))
+#+END_SRC
+** keybindings
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm-descbinds)
+#+END_SRC
+* window
+** no-bells-and-whistles
+Disable all fancy windowing components
+#+BEGIN_SRC emacs-lisp :tangle yes
+(tooltip-mode -1)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(mouse-wheel-mode t)
+(blink-cursor-mode 0)
+(defalias 'yes-or-no-p 'y-or-n-p)
+(setq frame-title-format '(buffer-file-name "%f" ("%b"))
+      inhibit-startup-message t
+      inhibit-startup-screen t
+      resize-mini-windows nil
+      ring-bell-function 'ignore
+      use-dialog-box nil
+      visible-bell nil)
+#+END_SRC
+** theme
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq font-lock-maximum-decoration t)
+#+END_SRC
+** font
+#+BEGIN_SRC emacs-lisp :tangle yes
+(set-frame-font "Inconsolata 14" nil t)
+#+END_SRC
+** ace-window
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle ace-window)
+(use-package ace-window
+  :init
+  (bind-key "C-x o" 'ace-window))
+#+END_SRC
+** windmove
+
+** perspective
+Workspaces using perspective
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle perspective)
+(use-package perspective
+  :init
+  (persp-mode)
+  :config
+  (setq persp-modestring-dividers '("(" ")" "|")
+	persp-mode-prefix-key (kbd "s-x"))
+  (bind-key [s-c] 'persp-switch)
+  (bind-key [s-right] 'persp-next)
+  (bind-key [s-left] 'persp-prev))
+#+END_SRC
+* buffer
+** undo-tree
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle undo-tree)
+(use-package undo-tree
+  :init (global-undo-tree-mode)
+  :config (setq
+	   undo-tree-visualizer-diff t
+	   undo-tree-visualizer-timestamps t))
+#+END_SRC
+** goto-line-with-feedback
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun goto-line-with-feedback ()
+  "Show line numbers temporarily, while prompting for the line number input"
+  (interactive)
+  (unwind-protect
+      (progn
+        (linum-mode 1)
+        (goto-line (read-number "Goto line: ")))
+    (linum-mode -1)))
+(global-set-key [remap goto-line] 'goto-line-with-feedback)
+#+END_SRC
+** highline
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle highline)
+(global-set-key (kbd "C-h C-i") 'highline-mode)
+#+END_SRC
+** swoop
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm-swoop)
+(use-package helm-swoop
+  :init
+  (bind-key "C-c s" 'helm-swoop))
+#+END_SRC
+** swap-buffers
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun swap-buffers ()
+  "Put the buffer from the selected window in next window, and vice versa."
+  (interactive)
+  (let* ((this (selected-window))
+         (other (next-window))
+         (this-buffer (window-buffer this))
+         (other-buffer (window-buffer other)))
+    (set-window-buffer other this-buffer)
+    (set-window-buffer this other-buffer)))
+#+END_SRC
+** adaptive-wrap
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle adaptive-wrap)
+#+END_SRC
+* dired
+** wdired
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle wdired)
+(use-package wdired
+  :bind (:map dired-mode-map
+	      ("r" . wdired-change-to-wdired-mode))
+  :init
+  (add-hook 'dired-load-hook
+	    (lambda ()
+	      (load "dired-x")
+	      (setq directory-sep-char ?/
+		    wdired-allow-to-change-permissions t
+		    dired-backup-overwrite t)))
+  (add-hook 'dired-mode-hook #'highline-mode-on))
+#+END_SRC
+** dired-narrow
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package dired-narrow
+  :bind (:map dired-mode-map
+	      ("/" . dired-narrow)))
+#+END_SRC
+** dired-subtree
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package dired-subtree
+  :bind (:map dired-mode-map
+	      ("<tab>" . dired-subtree-cycle)
+	      ("i" . dired-subtree-insert)
+	      ("k" . dired-subtree-remove))
+  :config
+  (setq dired-subtree-line-prefix
+	(lambda (depth) (make-string (* 2 depth) ?\s)))
+  (setq dired-subtree-use-backgrounds nil))
+#+END_SRC
+** dired-details
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle dired-details)
+(use-package dired-details
+  :init
+  (dired-details-install)
+  :config
+  (bind-key (kbd "C-x C-d") 'dired)
+  (setq dired-details-hidden-string ""
+	dired-dwim-target t))
+#+END_SRC
+** dired-lynx
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun dired-lynx-keybindings ()
+  (define-key dired-mode-map [left]  'dired-up-directory)
+  (define-key dired-mode-map [right] 'dired-view-file))
+(add-hook 'dired-mode-hook 'dired-lynx-keybindings)
+#+END_SRC
+** dired-x
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package dired-x
+  :bind (:map dired-mode-map
+	      ("o" . dired-open-file)
+	      ("[C-return]" . dired-open-file))
+  :config
+  (setq-default dired-omit-files-p nil)
+  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$|^\\.?#")
+        dired-omit-mode t)
+  (add-hook 'dired-after-readin-hook #'highline-mode-on)
+  (add-hook 'dired-mode-hook #'highline-mode-on))
+#+END_SRC
+* format
+** json
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle js2-mode)
+(el-get-bundle jq-mode)
+(use-package jq-mode
+  :init
+  (autoload 'jq-mode "jq-mode.el" "Major mode for editing jq files" t)
+  :config
+  (add-to-list 'auto-mode-alist '("\\.jq$" . jq-mode))
+  (with-eval-after-load "json-mode"
+    (define-key json-mode-map (kbd "C-c C-j") #'jq-interactively)))
+#+END_SRC
+** csv
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle csv-mode)
+#+END_SRC
+** toml
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle toml-mode)
+#+END_SRC
+** pdf
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle pdf-tools)
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (require 'org-pdfview)
+  (bind-keys :map pdf-view-mode-map
+	      ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+	      ("g"  . pdf-view-first-page)
+	      ("G"  . pdf-view-last-page)
+	      ("l"  . image-forward-hscroll)
+	      ("h"  . image-backward-hscroll)
+	      ("j"  . pdf-view-next-page)
+	      ("k"  . pdf-view-previous-page)
+	      ("e"  . pdf-view-goto-page)
+	      ("u"  . pdf-view-revert-buffer)
+	      ("al" . pdf-annot-list-annotations)
+	      ("ad" . pdf-annot-delete)
+	      ("aa" . pdf-annot-attachment-dired)
+	      ("am" . pdf-annot-add-markup-annotation)
+	      ("at" . pdf-annot-add-text-annotation)
+	      ("y"  . pdf-view-kill-ring-save)
+	      ("i"  . pdf-misc-display-metadata)
+	      ("s"  . pdf-occur)
+	      ("b"  . pdf-view-set-slice-from-bounding-box)
+	      ("r"  . pdf-view-reset-slice)))
+
+(use-package pdf-view
+  :config
+  (setq-default pdf-view-display-size 'fit-page)
+  (add-hook 'pdf-view-mode-hook #'pdf-view-fit-page-to-window)
+  (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-view-resize-factor 1.10
+	doc-view-resolution 200))
+#+END_SRC
+** epub
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle nov)
+(el-get-bundle justify-kp)
+(use-package nov
+  :init
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  :config
+  (setq nov-text-width 80
+	visual-fill-column-center-text t))
+#+END_SRC
+** md
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle markdown-mode)
+#+END_SRC
+** dot
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle graphviz-dot-mode)
+
+#+END_SRC
+** yaml
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle yaml-mode)
+#+END_SRC
+** pu
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle plantuml-mode)
+(defun plantuml-display-image ()
+  (interactive)
+  (let* ((plantuml-file (concat (file-name-sans-extension buffer-file-name) ".png"))
+         (plantuml-buf (get-buffer (file-name-nondirectory plantuml-file))))
+    (if (not (buffer-live-p plantuml-buf))
+	(find-file plantuml-file)
+      (progn
+	(pop-to-buffer plantuml-buf)
+	(revert-buffer nil t nil)))))
+#+END_SRC
+* lisp
+** paredit
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle paredit)
+(use-package paredit
+  :bind (("M-]" . paredit-forward-slurp-sexp)
+	 ("M-[" . paredit-backward-slurp-sexp)
+	 ("M-}" . paredit-forward-barf-sexp)
+	 ("M-{" . paredit-backward-barf-sexp))
+  :init
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+  (add-hook 'cider-repl-mode-hook 'paredit-mode)
+  (add-hook 'clojure-mode-hook 'paredit-mode)
+  (add-hook 'lisp-mode-hook 'paredit-mode)
+  (add-hook 'slime-mode-hook 'paredit-mode)
+  (add-hook 'scheme-mode-hook 'paredit-mode))
+#+END_SRC
+** rainbow-delimiters
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle rainbow-delimiters)
+(use-package rainbow-delimiters
+  :init
+  (require 'rainbow-delimiters nil)
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode)
+  (set-face-foreground 'rainbow-delimiters-depth-1-face "gray35")
+  (set-face-foreground 'rainbow-delimiters-depth-2-face "gray35")
+  (set-face-foreground 'rainbow-delimiters-depth-3-face "gray35")
+  (set-face-foreground 'rainbow-delimiters-depth-4-face "gray35")
+  (set-face-foreground 'rainbow-delimiters-depth-5-face "gray35")
+  (set-face-foreground 'rainbow-delimiters-depth-6-face "gray35")
+  (set-face-foreground 'rainbow-delimiters-depth-7-face "gray35")
+  (set-face-foreground 'rainbow-delimiters-depth-8-face "gray35")
+  (show-paren-mode 1))
+#+END_SRC
+** slime
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle slime)
+(use-package slime
+  :commands (slime slime-lisp-mode-hook)
+  :config
+  (add-to-list 'slime-contribs 'slime-fancy)
+  (slime-setup '(slime-asdf slime-banner slime-fuzzy))
+  (add-hook 'lisp-mode-hook 'slime-mode)
+  (add-hook 'slime-repl-mode-hook 'paredit-mode)
+  (setq inferior-lisp-program "/usr/local/bin/sbcl --dynamic-space-size 1024"
+	slime-net-encoding-system 'utf-8-unix
+	slime-complete-symbol-function 'slime-fuzzy-complete-symbol
+	slime-startup-animation t))
+#+END_SRC
+** ielm
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ielm
+  :defer t
+  :config
+  (progn
+    (define-key ielm-map (kbd "C-c C-z") #'quit-window)))
+#+END_SRC
+** pretty-symbols
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-prettify-symbols-mode 1)
+(setq prettify-symbols-unprettify-at-point t)
+#+END_SRC
+** clojure-mode
+(el-get-bundle clojure-mode)
+(el-get-bundle edn)
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package clojure-mode
+  :mode ("\\.edn$" "\\.clj[sx]?$" "Irminfile")
+  :config
+  (add-hook 'clojure-mode-hook
+        (lambda ()
+          (push '("fn" . ?λ) prettify-symbols-alist)))
+  (setq clojure-align-forms-automatically t
+	comment-column 70)
+  (define-clojure-indent
+    (defroutes 'defun)
+    (GET 2)
+    (POST 2)
+    (PUT 2)
+    (DELETE 2)
+    (HEAD 2)
+    (ANY 2)
+    (context 2)))
+#+END_SRC
+** cider
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle clojure-emacs/cider :checkout "v0.15.0")
+(use-package cider
+  :init
+  (setq nrepl-hide-special-buffers nil
+	nrepl-buffer-name-show-port t
+	nrepl-buffer-name-separator "-"
+	nrepl-popup-stacktraces-in-repl nil
+	nrepl-log-messages nil
+	cider-repl-display-help-banner nil
+	cider-interactive-eval-result-prefix "=> "
+     	cider-repl-use-clojure-font-lock t
+	cider-repl-tab-command #'indent-for-tab-command
+	cider-repl-pop-to-buffer-on-connect nil
+	cider-repl-history-size 1000
+	cider-repl-history-file "~/.emacs.d/cider.txt"
+	cider-repl-result-prefix "=> "
+	cider-repl-display-in-current-window t
+	cider-repl-wrap-history nil
+	cider-repl-use-pretty-printing t
+	cider-lein-parameters "trampoline repl :headless"
+	cider-show-error-buffer t
+	cider-auto-select-error-buffer t
+	cider-stacktrace-fill-column 80
+	cider-stacktrace-default-filters '(tooling dup)
+	cider-test-show-report-on-success t
+	cider-prompt-save-file-on-load nil
+	cider-prompt-for-symbol nil
+	cider-switch-to-repl-command 'cider-switch-to-current-repl-buffer
+	cider-font-lock-dynamically nil
+	cider-popup-stacktraces t
+	;cider-test-items-background-color "Grey15"
+	;cider-stacktrace-frames-background-color "Grey15"
+	cider-test-show-report-on-success t)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+  (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
+  (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
+  :bind (("C-c n"  . cider-find-ns)
+	 ("C-c e"  . cider-visit-error-buffer)
+	 ("C-c h"  . cider-apropos)
+	 ("C-c M-c". cider-connect)
+	 :map cider-repl-mode-map
+	 ("C-l"    . cider-repl-clear-buffer)
+	 ("M-p"    . cider-repl-previous-input)))
+
+(add-to-list 'load-path "~/.emacs.d/el-get/helm-cider")
+(use-package :helm-cider
+  :init
+  (require 'helm-cider-spec)
+  (load "helm-cider-repl.el")
+  (add-hook 'cider-repl-mode-hook 'helm-cider-mode)
+  (add-hook 'clojure-mode-hook 'helm-cider-mode))
+
+(defadvice clojure-test-run-tests (before save-first activate)
+  (save-buffer))
+(defadvice nrepl-load-current-buffer (before save-first activate)
+  (save-buffer))
+#+END_SRC
+** lein
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun lein-test ()
+  (interactive)
+  (compile "lein test")
+  (pop-to-buffer
+   (get-buffer "*compilation*"))
+  (rename-buffer "*lein-test*")
+  (delete-window))
+
+(defun lein-run ()
+  (interactive)
+  (compile "lein run")
+  (pop-to-buffer
+   (get-buffer "*compilation*"))
+  (rename-buffer "*lein-run*")
+  (delete-window))
+#+END_SRC
+** racket-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle racket-mode)
+(use-package racket-mode
+  :config
+    (add-hook 'racket-mode-hook
+        (lambda ()
+          (push '("lambda" . ?λ) prettify-symbols-alist)))
+    (setq racket-program "/usr/local/bin/racket"
+	  racket-images-inline t
+	  tab-always-indent 'complete
+	  comint-prompt-read-only t)
+  (add-hook 'scheme-mode-hook 'racket-mode)
+  (add-hook 'racket-mode-hook #'enable-paredit-mode)
+  (add-hook 'racket-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'racket-repl-mode-hook #'enable-paredit-mode)
+  (add-hook 'racket-repl-mode-hook 'rainbow-delimiters-mode)
+#+END_SRC
+** emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package emacs-lisp-mode
+  :init
+  (progn
+    (use-package eldoc
+      :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
+    (use-package macrostep
+      :bind ("C-c e" . macrostep-expand))
+    (use-package ert
+      :config (add-to-list 'emacs-lisp-mode-hook 'ert--activate-font-lock-keywords)))
+  :config
+  (progn
+    (setq tab-always-indent 'complete)
+    (add-to-list 'completion-styles 'initials t))
+  :bind (("M-." . find-function-at-point)
+         ("M-&" . complete-symbol))
+  :interpreter (("emacs" . emacs-lisp-mode)))
+#+END_SRC
+* media
+** emms
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle emms)
+(use-package emms
+  :config
+  (add-to-list 'emms-player-base-format-list "opus")
+  (emms-all)
+  (emms-default-players)
+  (setq emms-source-file-default-directory "~/src/music/"
+	emms-player-mplayer-parameters '("-slave" "-quiet" "-really-quiet" "-vo" "null")
+	emms-playlist-default-major-mode 'emms-playlist-mode)
+  (global-set-key '[C-c space] 'emms-pause))
+#+END_SRC
+** eimp
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle eimp)
+(use-package eimp
+  :config
+  (add-hook 'image-mode-hook 'eimp-mode))
+#+END_SRC
+** festival
+* modeline
+** smart-mode-line
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package smart-mode-line
+  :init
+  (sml/setup)
+  (setq sml/no-confirm-load-theme t
+	sml/vc-mode-show-backend t
+	;sml/mode-width 10
+	;sml/name-width 20
+	resize-mini-windows nil)
+  (sml/apply-theme nil)
+  :config
+  (dolist (m '("Helm" "AC" "Undo-Tree" "ARev" "Anzu" "Guide" "company"))
+    (add-to-list 'sml/hidden-modes (concat " " m))))
+#+END_SRC
+** time
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package time
+  :config
+  (display-time-mode)
+  (setq
+   display-time-day-and-date nil
+   display-time-24hr-format t
+   display-time-default-load-average nil))
+#+END_SRC
+** battery
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package battery
+  :config
+  (display-battery-mode))
+#+END_SRC
+* org
+** org-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package org
+  :mode ("\\.org\\'" . org-mode)
+  :bind (:map org-mode-map
+	 ("C-c !" . org-timestamp-inactive)
+	 ("C-c l" . org-store-link)
+	 ("C-c c" . org-capture)
+	 ("C-c a" . org-agenda)
+	 ("C-c b" . org-iswitchb)
+	 ("C-c C-w" . org-refile)
+	 ("C-c C-x C-o" . org-clock-out)
+	 ("M-o" . ace-link-org))
+  :config
+  (progn
+    (setq org-directory "~/src/org"
+	  org-mode-file-dir "~/src/org")
+    (setq org-tags-column 40
+	  org-hide-emphasis-markers t
+	  org-hide-leading-stars t
+	  org-startup-indented t
+	  org-replace-disputed-keys nil
+	  org-use-speed-commands t
+	  org-use-fast-todo-selection t
+	  org-log-done 'time
+	  org-html-doctype "html5"
+	  org-todo-keywords '((sequence "TODO(t)"
+					"|"
+					"NOW(n)"
+					"DONE(d)"))
+	  org-M-RET-may-split-line '((item . nil))
+	  org-return-follows-link t)
+    (add-hook 'org-mode-hook 'turn-on-font-lock)
+    (add-hook 'org-mode-hook 'org-indent-mode)
+    (add-hook 'org-mode-hook 'auto-fill-mode)
+    (add-hook 'before-save-hook 'org-align-all-tags nil t)
+    (define-key org-mode-map [S-right] 'windmove-right)
+    (define-key org-mode-map [S-left]  'windmove-left)
+    (define-key org-mode-map [S-up] 'windmove-up)
+    (define-key org-mode-map [S-down]  'windmove-down)))
+#+END_SRC
+** org-babel
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ob
+  :init
+  (require 'ob)
+  (require 'cider)
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((sh . t)
+     (ditaa . t)
+     (plantuml . t)
+     (clojure . t)
+     (dot . t)))
+  (setq org-babel-clojure-backend 'cider
+	org-src-fontify-natively t
+	org-src-window-setup 'current-window
+	org-src-tab-acts-natively t
+	org-src-preserve-indentation t
+	org-edit-src-content-indentation 0
+	org-confirm-babel-evaluate nil
+	org-support-shift-select 'always
+	org-confirm-babel-evaluate nil
+	org-babel-clojure-sync-nrepl-timeout nil
+	org-inline-image-overlays t)
+  (add-hook 'org-babel-after-execute-hook
+	    (lambda ()
+	      (when org-inline-image-overlays
+		(org-redisplay-inline-images))))
+  (add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj")))
+#+END_SRC
+** epresent
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle epresent)
+#+END_SRC
+** org-rifle
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm-org-rifle)
+(use-package helm-org-rifle
+  :init
+  (setq org-refile-targets '((nil :level . 1)
+			     (org-agenda-files :level . 1)))
+  (bind-key "C-x i" (lambda ()
+		      (interactive)
+		      (helm-org-rifle-directories '("~/src/org")))))
+#+END_SRC
+** org-passwords
+** org-gcal
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle org-gcal)
+#+END_SRC
+** org-nav
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle orgnav)
+(use-package orgnav
+  :init
+  (progn
+    (require 'orgnav)))
+#+END_SRC
+** org-links
+#+BEGIN_SRC emacs-lisp
+(el-get-bundle org-pdfview)
+(el-get-bundle org-ebook)
+(add-to-list 'org-file-apps
+	     '(("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))
+	       ("\\.epub\\'" . (lambda (file link) (org-ebook-open link)))))
+(add-hook 'pdf-view-mode-hook #'(lambda () (require 'org-pdfview)))
+#+END_SRC
+* project
+
+* rust
+** rust-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle rust-mode)
+(el-get-bundle cargo)
+(el-get-bundle flycheck-rust)
+
+(use-package rust-mode
+  :mode ("\\.rs$" . rust-mode)
+  :init
+  (global-company-mode)
+  :config
+  (progn
+    (setq compile-command "cargo run")
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'rust-mode-hook 'cargo-minor-mode))
+  :bind (:map rust-mode-map
+	      ("C-c C-k" . cargo-process-run)))
+#+END_SRC
+** rust-fmt
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package rustfmt
+  :config
+  (define-key rust-mode-map (kbd "C-c C-f") #'rustfmt-format-buffer))
+#+END_SRC
+* shell
+** comint
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package comint
+  :defer t
+  :config
+  (progn
+    (setf comint-prompt-read-only t
+          comint-history-isearch nil)
+    (add-hook 'shell-mode-hook
+          (lambda ()
+	    (define-key shell-mode-map (kbd "C-r") 'helm-comint-input-ring)
+	    (define-key shell-mode-map (kbd "M-r") 'helm-comint-input-ring)
+            (define-key shell-mode-map (kbd "C-l") 'comint-clear-buffer)))))
+(add-to-list 'exec-path "/usr/local/bin")
+
+(use-package shell
+  :config
+  (progn
+    (setq explicit-shell-file-name "bash")))
+
+(global-set-key (kbd "C-x RET") 'projectile-run-shell)
+#+END_SRC
+** eshell
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eshell
+  :bind ("M-e" . eshell)
+  :init
+  (add-hook 'eshell-first-time-mode-hook
+            (lambda ()
+              (add-to-list 'eshell-visual-commands "htop")))
+  :config
+  (progn
+    (setq eshell-history-size 5000)
+    (setq eshell-save-history-on-exit t)))
+#+END_SRC
+** bash-completion
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle bash-completion)
+(use-package bash-completion
+  :disabled t
+  :init
+  (bash-completion-setup))
+#+END_SRC
+** shell-pop
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle shell-pop)
+#+END_SRC
+* system
+** docker
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle docker)
+(el-get-bundle dockerfile-mode)
+(use-package docker
+  :config
+  (add-hook 'docker-containers-mode #'highline-mode-on))
+#+END_SRC
+** sudo
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun sudo-find-file (file-name)
+  (interactive "Fsudo find file: ")
+  (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
+    (find-file tramp-file-name)))
+
+(global-set-key (kbd "C-x F") 'sudo-find-file)
+#+END_SRC
+** proced
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package proced
+  :config
+  (setq proced-auto-update-flag t))
+#+END_SRC
+** htop
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package neato-graph-bar
+  :ensure t)
+#+END_SRC
+** ssh
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle ssh)
+(el-get-bundle ssh-config)
+(use-package ssh
+  :init
+  (add-hook 'ssh-mode-hook
+	    (lambda ()
+	      (setq ssh-directory-tracking-mode t)
+	      (shell-dirtrack-mode t)
+	      (setq dirtrackp nil))))
+#+END_SRC
+** tramp
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package tramp
+  :config
+  (setq tramp-default-method "ssh"
+	tramp-auto-save-directory "~/.emacs.d/tramp-autosave-dir"
+	password-cache-expiry 3600
+	tramp-ssh-controlmaster-options  (concat
+					  "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
+					  "-o ControlMaster=auto -o ControlPersist=no"))
+  (progn
+    (add-to-list 'tramp-default-proxies-alist
+		 '(nil "\\`root\\'" "/ssh:%h:"))
+    (add-to-list 'tramp-default-proxies-alist
+		  '((regexp-quote (system-name)) nil nil))))
+
+#+END_SRC
+* web
+** eww
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle eww-lnum)
+(el-get-bundle ace-link)
+(use-package eww
+  :bind
+  (:map eww-mode-map
+   ("C-x g" . eww)
+   ("C-x G" . eww-browse-with-external-browser)
+   ("s-h" . eww-list-histories))
+  :config
+  (setq  eww-search-prefix  "https://www.google.com/search?q="
+	 eww-download-directory "~/downloads"
+	 eww-form-checkbox-symbol "[ ]"
+	 eww-form-checkbox-selected-symbol "[X]"
+	 shr-color-visible-luminance-min 80)
+    (add-hook 'eww-mode 'ace-link-mode))
+
+(use-package eww-lnum
+  :bind (:map eww-mode-map
+	      ("f" . eww-lnum-follow)
+	      ("U" . eww-lnum-universal)))
+
+(defun eww-browse-url-of-file ()
+  "Browse the current file using `eww'."
+  (interactive)
+  (let ((browse-url-browser-function 'eww-browse-url))
+    (call-interactively #'browse-url-of-file)))
+#+END_SRC
+** elfeed
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle elfeed)
+(el-get-bundle elfeed-org)
+(defvar elfeed-show-switch-function #'switch-to-buffer)
+(defun elfeed-show-find-window ()
+  (cl-loop for window in (window-list)
+           for buffer = (window-buffer window)
+           for mode = (with-current-buffer buffer major-mode)
+           when (eq mode 'elfeed-show-mode)
+           return window))
+
+(defun elfeed-show-in-other-buffer (buffer)
+  (let ((target (elfeed-show-find-window)))
+    (if target
+        (setf (window-buffer target) buffer)
+      (pop-to-buffer buffer))))
+
+(defun switch-to-elfeed-entry-buffer ()
+  (interactive)
+  (let ((entry "*elfeed-entry*"))
+    (if (eq (current-buffer) (get-buffer entry))
+	(switch-to-buffer "*elfeed-search*")
+      (if (get-buffer entry)
+	  (switch-to-buffer "*elfeed-entry*")
+	(elfeed)))))
+
+(defhydra hydra-elfeed ()
+  "filter"
+  ("c" (elfeed-search-set-filter "@50-weeks-ago +clojure") "clojure")
+  ("e" (elfeed-search-set-filter "@50-weeks-ago +emacs") "emacs")
+  ("l" (elfeed-search-set-filter "@10-weeks-ago +lisp") "lisp")
+  ("t" (elfeed-search-set-filter "@10-weeks-ago +tech") "tech")
+  ("a" (elfeed-search-set-filter "@4-weeks-ago +atlantic") "atlantic")
+  ("s" (elfeed-search-set-filter "@4-weeks-ago +stallman") "stallman")
+  ("r" (elfeed-search-set-filter "@10-weeks-ago +rust") "rust")
+  ("T" (elfeed-search-set-filter "@1-day-ago") "Today")
+  ("q" nil "quit" :color blue))
+
+(use-package elfeed
+  :init
+  (progn
+    (require 'elfeed)
+    (require 'elfeed-org)
+    (elfeed-org))
+  (bind-key (kbd "C-x w") 'switch-to-elfeed-entry-buffer)
+  :bind
+  (:map elfeed-search-mode-map
+	 ("?" . hydra-elfeed/body)
+	 ("c" . hydra-elfeed/lambda-c)
+	 ("l" . hydra-elfeed/lambda-l)
+	 ("e" . hydra-elfeed/lambda-e)
+	 ("t" . hydra-elfeed/lambda-t)
+	 ("a" . hydra-elfeed/lambda-a)
+	 ("s" . hydra-elfeed/lambda-s)
+	 ("p" . hydra-elfeed/lambda-p)
+	 ("r" . hydra-elfeed/lambda-r)
+	 ("g" . elfeed-update))
+  :config
+  (setq-default elfeed-search-filter "@3-weeks-ago +clojure")
+  (setf url-queue-timeout 30
+	elfeed-show-switch-function #'elfeed-show-in-other-buffer
+	elfeed-show-truncate-long-urls t
+	elfeed-sort-order 'descending
+	rmh-elfeed-org-files '("~/src/org/elfeed.org")))
+#+END_SRC
+** wikipedia
+** dictionary
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle dictionary)
+(use-package dictionary
+  :bind (("C-x d" . dictionary-search)
+	 ("C-x D" . dictionary-match-words))
+  :config (load-library "dictionary-init"))
+#+END_SRC
+** engine-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle engine-mode)
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox")
+(use-package engine-mode
+  :init
+  (require 'engine-mode)
+  (engine-mode)
+  :config
+  (engine/set-keymap-prefix (kbd "C-x /"))
+  (defengine github
+    "https://github.com/search?ref=simplesearch&q=%s"
+    :browser 'browse-url-generic
+    :keybinding "c")
+  (defengine google
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+    :browser 'browse-url-generic
+    :keybinding "g")
+  (defengine duckduckgo
+    "https://duckduckgo.com/?q=%s"
+    :browser 'eww-browse-url
+    :keybinding "d")
+  (defengine wikipedia
+    "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+    :keybinding "w"
+    :browser 'browse-url-generic)
+  (defengine youtube
+    "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
+    :keybinding "y"
+    :browser 'browse-url-generic))
+#+END_SRC
+** jabber
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle emacs-jabber)
+(use-package jabber
+  :config
+  (setq
+   jabber-auto-reconnect t
+   jabber-vcard-avatars-retrieve nil
+   jabber-avatar-verbose nil
+   jabber-history-enabled t
+   jabber-chat-buffer-format "*-jabber-%n-*"
+   jabber-roster-buffer "*-jabber-*"
+   jabber-roster-line-format " %c %-25n %u %-8s (%r)"
+   jabber-show-offline-contacts nil)
+  (add-hook 'jabber-mode-hook
+            '(lambda ()
+               (variable-pitch-mode 1)))
+  :bind (("C-x C-j o" . jabber-chat-with)))
+
+(defun jabber ()
+  (interactive)
+  (jabber-connect)
+  (switch-to-buffer "*-jabber-*"))
+
+(defun helm-jabber-online-contacts ()
+  (with-no-warnings
+    (cl-loop for item in (jabber-concat-rosters)
+          when (get item 'connected)
+          collect
+          (if (get item 'name)
+              (cons (get item 'name) item)
+            (cons (symbol-name item) item)))))
+
+(defvar helm-source-jabber-contacts
+  (helm-build-sync-source "Jabber Contacts"
+    :init (lambda () (require 'jabber))
+    :candidates (lambda () (mapcar 'car (helm-jabber-online-contacts)))
+    :action (lambda (x)
+              (jabber-chat-with
+               (jabber-read-account)
+               (symbol-name
+                (cdr (assoc x (helm-jabber-online-contacts))))))))
+#+END_SRC
+** slack
+** erc
+** restclient
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle restclient)
+(use-package restclient
+  :mode ("\\.http\\'" . restclient-mode))
+#+END_SRC
+** mu4e
