@@ -26,8 +26,6 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
     (goto-char (point-max))
     (eval-print-last-sexp)))
 (el-get 'sync)
-
-(add-to-list 'exec-path "/home/icylisper/.cask/bin")
 #+END_SRC
 * libraries
 ** package managment
