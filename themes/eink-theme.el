@@ -132,3 +132,5 @@
    `(idle-highlight ((t (:background ,bg-highlight))))
    '(eval-sexp-fu-flash ((t (:foreground "gainsboro"))))
    `(cider-result-overlay-face ((t (:weight bold))))))
+
+(provide-theme 'eink)
