@@ -187,7 +187,7 @@ Disable all fancy windowing components
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle ace-window)
 (use-package ace-window
-  :init
+  :config
   (bind-key "M-p" 'ace-window))
 #+END_SRC
 ** windmove
@@ -755,6 +755,29 @@ Various file formats and extensions
 #+END_SRC
 * org
 ** org-mode
+- author
+  Carsten Dominik
+- items
+  | TAB       | org-cycle            |
+  | S-TAB     | org-shiftab          |
+  | M-left    | org-do-promote       |
+  | M-right   | org-do-demote        |
+  | S-M-left  | org-promote-subtree  |
+  | S-M-right | org-demote-subtee    |
+  | C-c C-c   | org-ctrl-c-ctrl-c    |
+  | M-ret     | new-list-item        |
+  | M-S-ret   | new-checkbox-item    |
+  | C-c -     | cycle-item           |
+  | C-c /     | org-sparse-tree      |
+  | C-c C-l   | org-insert-link      |
+  | C-c C-o   | org-open-link        |
+  | C-c C-q   | org-set-tags-command |
+  | C-C C-c   | org-set-tags-command |
+- timers
+  | C-c -     | cycle-item     |
+  | C-c C-x - | org-timer-item |
+  | M-ret     | insert-heading |
+  | C-c C-x . | stop timer     |
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package org
   :mode ("\\.org\\'" . org-mode)
@@ -796,20 +819,40 @@ Various file formats and extensions
     (define-key org-mode-map [S-down]  'windmove-down)))
 #+END_SRC
 ** org-agenda
+| C-c t     | org-capture      |
+| C-c a t   | org-agenda all   |
+| C-c C-s   | org-schedule     |
+| C-c C-x p | org-set-property |
+| C-c C-e   | org-export       |
+
+Capture todo items using C-c c t
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package org-agenda
   :mode ("\\.org\\'" . org-mode)
-  :bind (:map org-mode-map
-	 ("C-c a" . org-agenda))
   :config
+  (bind-key "C-c a" 'org-agenda)
+  :bind (:map org-mode-map
+	      ("C-cx" . org-todo-state-map))
   (progn
     (setq  org-use-fast-todo-selection t
+	   org-agenda-window-setup '(current-window)
+	   org-deadline-warning-days 7
+	   org-agenda-files '("~/src/org/todo.org")
+	   org-highest-priority ?A
+	   org-lowest-priority ?C
+	   org-default-priority ?A
+	   org-capture-templates '(("t" "todo" entry
+				    (file+headline "~/src/org/todo.org" "Tasks")
+				   "* TODO %?"))
 	   org-todo-keywords '((sequence "TODO(t)"
 					 "|"
 					 "NOW(n)"
 					 "DONE(d)")))))
 #+END_SRC
+*** TODO org-
 ** org-babel
+| C-c C-v   | org-bable prefix |
+| C-c C-v t | org-bable-tangle |
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ob
   :init
@@ -818,25 +861,38 @@ Various file formats and extensions
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((sh . t)
+   '((emacs-lisp . t)
+     (ditaa . t)
+     (sh . t)
+     (org . t)
+     (sql . t)
+     (sh . t)
      (ditaa . t)
      (plantuml . t)
      (clojure . t)
      (dot . t)))
   (setq org-babel-clojure-backend 'cider
-	org-src-fontify-natively t
-	org-src-window-setup 'current-window
-	org-src-tab-acts-natively t
-	org-src-preserve-indentation t
-	org-edit-src-content-indentation 0
-	org-confirm-babel-evaluate nil
 	org-babel-clojure-sync-nrepl-timeout nil
-	org-inline-image-overlays t)
+	org-confirm-babel-evaluate nil
+	org-plantuml-jar-path "~/.emacs.d/el-get/plantuml-mode/plantuml.jar"
+	org-inline-image-overlays t
+	org-startup-with-inline-images t)
   (add-hook 'org-babel-after-execute-hook
 	    (lambda ()
 	      (when org-inline-image-overlays
 		(org-redisplay-inline-images))))
   (add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj")))
+
+(use-package org-src
+  :bind (:map org-src-mode-map
+	 ("C-x C-s" . org-edit-src-exit))
+  :config
+  (setq org-src-fontify-natively t
+	org-src-tab-acts-natively t
+	org-src-window-setup 'current-window
+	org-src-preserve-indentation t
+	org-edit-src-content-indentation 0
+	org-inline-image-overlays t))
 #+END_SRC
 ** epresent
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -866,14 +922,17 @@ Various file formats and extensions
 #+END_SRC
 ** org-links
 #+BEGIN_SRC emacs-lisp
-(el-get-bundle markus1189/org-pdfview)
-(el-get-bundle org-ebook
-  :url "https://raw.githubusercontent.com/bddean/emacs-ereader/master/org-ebook.el")
+(el-get-bundle org-pdfview)
+(el-get-bundle org-ebook)
 (add-to-list 'org-file-apps
 	     '(("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))
 	       ("\\.epub\\'" . (lambda (file link) (org-ebook-open link)))))
 (add-hook 'pdf-view-mode-hook #'(lambda () (require 'org-pdfview)))
 #+END_SRC
+** org-table
+|   |   |
+|   |   |
+
 * project
 ** vc
 #+BEGIN_SRC emacs-lisp :tangle yes
