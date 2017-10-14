@@ -908,17 +908,22 @@ Workspaces using perspective
   	 ("C-c D" . projectile-dired)
          ("C-c !" . projectile-run-command-in-root)
 	 ("C-c RET" . projectile-run-shell)
+	 ("C-x RET" . projectile-run-shell)
          ("C-c t" . projectile-find-test-file)
   	 ("C-c b" . helm-projectile-switch-to-buffer)
 	 ("C-x p" . projectile-switch-project)))
 #+END_SRC
-** git-grep
+** helm-git-grep
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle helm-git-grep)
 (el-get-bundle wgrep)
 (use-package helm-git-grep
-  :config
-  (bind-key "C-c a" helm-git-grep))
+  :init
+  (require 'helm-git-grep)
+  (global-set-key (kbd "C-c g") 'helm-git-grep)
+  (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
+  (eval-after-load 'helm
+    '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm)))
 #+END_SRC
 ** ffip
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1057,8 +1062,6 @@ Workspaces using perspective
   :config
   (progn
     (setq explicit-shell-file-name "bash")))
-
-(global-set-key (kbd "C-x RET") 'projectile-run-shell)
 #+END_SRC
 ** eshell
 #+BEGIN_SRC emacs-lisp :tangle yes
