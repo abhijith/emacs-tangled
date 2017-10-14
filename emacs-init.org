@@ -7,6 +7,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 * dependencies
   #+BEGIN_SRC bash
    curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
+   sudo ln -sf ~/.cask/bin/cask /usr/local/bin/cask
    sudo apt-get install libpng-dev libz-dev libpoppler-glib-dev libpoppler-private-dev
   #+END_SRC
 * debugging
@@ -48,7 +49,6 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 (el-get-bundle xml-plus)
 (el-get-bundle esxml)
 (el-get-bundle oauth2)
-
 (use-package queue
   :ensure t)
 #+END_SRC
@@ -86,7 +86,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
       echo-keystrokes 0.1
       directory-sep-char ?/)
 #+END_SRC
-** completion-system
+** helm
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle helm)
 (use-package helm
@@ -118,6 +118,14 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
   :bind (("C-c j" . helm-imenu)
 	 ("C-x b" . helm-mini)
 	 ("M-y"   . helm-show-kill-ring)))
+
+(defun filter-dired-buffers (buffer-list)
+  (delq nil (mapcar
+             (lambda (buffer)
+               (if (eq (with-current-buffer buffer major-mode)  'dired-mode)
+                   nil
+                 buffer))
+             buffer-list)))
 (advice-add 'helm-skip-boring-buffers :filter-return 'filter-dired-buffers)
 
 (with-eval-after-load 'helm-buffers
@@ -178,9 +186,10 @@ Disable all fancy windowing components
 ** theme
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(set-frame-font "Inconsolata 14" nil t)
-(setq font-lock-maximum-decoration t)
-(load-theme 'eink t)
+(when (equal (system-name) "hodor")
+  ;;(set-frame-font "Inconsolata 14" nil t)
+  (setq font-lock-maximum-decoration t)
+  (load-theme 'eink t))
 #+END_SRC
 ** ace-window
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -232,6 +241,7 @@ Workspaces using perspective
 (auto-revert-mode 1)
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
 #+END_SRC
 ** undo-tree
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -287,6 +297,39 @@ Workspaces using perspective
 (el-get-bundle crux)
 (use-package crux
   :bind (("C-a" . crux-move-beginning-of-line)))
+#+END_SRC
+** indent-buffer
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun indent-buffer ()
+  (interactive)
+  (indent-region (point-min) (point-max)))
+#+END_SRC
+** minibuffer
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle smex)
+
+(defun smex-update-after-load (unused)
+  (when (boundp 'smex-cache)
+    (smex-update)))
+
+(use-package smex
+  :init
+  (add-hook 'after-load-functions 'smex-update-after-load)
+  :bind (("M-z" . smex)))
+
+(defadvice smex (around space-inserts-hyphen activate compile)
+  (let ((ido-cannot-complete-command
+	 `(lambda ()
+	    (interactive)
+	    (if (string= " " (this-command-keys))
+		(insert ?-)
+	      (funcall ,ido-cannot-complete-command)))))
+    ad-do-it))
+
+(define-key minibuffer-local-completion-map '[tab] 'minibuffer-complete)
+(define-key minibuffer-local-completion-map '[spc] 'minibuffer-complete-word)
+(define-key minibuffer-local-must-match-map '[tab] 'minibuffer-complete)
+(define-key minibuffer-local-must-match-map '[spc] 'minibuffer-complete-word)
 #+END_SRC
 * dired
 ** wdired
@@ -386,6 +429,42 @@ Workspaces using perspective
 ** toml
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle toml-mode)
+#+END_SRC
+** pdf
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle pdf-tools)
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (require 'org-pdfview)
+  (bind-keys :map pdf-view-mode-map
+	      ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+	      ("g"  . pdf-view-first-page)
+	      ("G"  . pdf-view-last-page)
+	      ("l"  . image-forward-hscroll)
+	      ("h"  . image-backward-hscroll)
+	      ("j"  . pdf-view-next-page)
+	      ("k"  . pdf-view-previous-page)
+	      ("e"  . pdf-view-goto-page)
+	      ("u"  . pdf-view-revert-buffer)
+	      ("al" . pdf-annot-list-annotations)
+	      ("ad" . pdf-annot-delete)
+	      ("aa" . pdf-annot-attachment-dired)
+	      ("am" . pdf-annot-add-markup-annotation)
+	      ("at" . pdf-annot-add-text-annotation)
+	      ("y"  . pdf-view-kill-ring-save)
+	      ("i"  . pdf-misc-display-metadata)
+	      ("s"  . pdf-occur)
+	      ("b"  . pdf-view-set-slice-from-bounding-box)
+	      ("r"  . pdf-view-reset-slice)))
+
+(use-package pdf-view
+  :config
+  (setq-default pdf-view-display-size 'fit-page)
+  (add-hook 'pdf-view-mode-hook #'pdf-view-fit-page-to-window)
+  (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-view-resize-factor 1.10
+	doc-view-resolution 200))
 #+END_SRC
 ** epub
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -657,8 +736,8 @@ Workspaces using perspective
   (sml/setup)
   (setq sml/no-confirm-load-theme t
 	sml/vc-mode-show-backend t
-	;sml/mode-width 10
-	;sml/name-width 20
+	sml/mode-width 10
+	sml/name-width 20
 	resize-mini-windows nil)
   (sml/apply-theme nil)
   :config
@@ -810,11 +889,12 @@ Workspaces using perspective
 (use-package helm-projectile)
 (use-package projectile
   :init
+  (projectile-global-mode)
   (helm-projectile-on)
   :defer (projectile-cleanup-known-projects)
   :diminish projectile-mode
   :config
-  (setq projectile-switch-project-action 'helm-projectile-find-file
+  (setq projectile-switch-project-action 'projectile-dired
 	projectile-find-dir-includes-top-level t
 	projectile-remember-window-configs t
 	projectile-keymap-prefix (kbd "C-c p")
@@ -823,18 +903,22 @@ Workspaces using perspective
 	projectile-enable-caching t
 	projectile-require-project-root t
 	projectile-mode-line '(:eval (format " (%s)" (projectile-project-name)))
-	projectile-sort-order 'modification-time
-	helm-ff-skip-boring-files t
-        helm-ff-search-library-in-sexp nil
-        helm-ff-file-name-history-use-recentf nil)
-  :bind (("C-c a" . helm-git-grep)
-         ("C-c f" . helm-projectile-find-file)
+	projectile-sort-order 'modification-time)
+  :bind (("C-c f" . helm-projectile-find-file)
   	 ("C-c D" . projectile-dired)
          ("C-c !" . projectile-run-command-in-root)
 	 ("C-c RET" . projectile-run-shell)
          ("C-c t" . projectile-find-test-file)
   	 ("C-c b" . helm-projectile-switch-to-buffer)
 	 ("C-x p" . projectile-switch-project)))
+#+END_SRC
+** git-grep
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm-git-grep)
+(el-get-bundle wgrep)
+(use-package helm-git-grep
+  :config
+  (bind-key "C-c a" helm-git-grep))
 #+END_SRC
 ** ffip
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -846,7 +930,10 @@ Workspaces using perspective
         (find-file-in-project)))))
 
 (use-package find-file-in-project
-  :init
+  :config
+  (setq  helm-ff-skip-boring-files t
+	 helm-ff-search-library-in-sexp nil
+	 helm-ff-file-name-history-use-recentf nil)
   (bind-key "C-c c" (ffip-create-pattern-file-finder "*.clj")))
 #+END_SRC
 ** git-modeline
@@ -918,6 +1005,7 @@ Workspaces using perspective
 (el-get-bundle git-link)
 (el-get-bundle github-browse-file)
 (el-get-bundle github-clone)
+(el-get-bundle helm-open-github)
 #+END_SRC
 ** circleci
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1058,10 +1146,6 @@ Workspaces using perspective
     (add-to-list 'tramp-default-proxies-alist
 		  '((regexp-quote (system-name)) nil nil))))
 
-#+END_SRC
-** sql
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle eric-hansen/helm-sql-connect)
 #+END_SRC
 * web
 ** eww
