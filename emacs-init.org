@@ -181,7 +181,7 @@ Disable all fancy windowing components
 (when (equal (system-name) "hodor")
   (set-frame-font "Inconsolata 14" nil t)
   (setq font-lock-maximum-decoration t)
-  (load-theme 'charcoal-black t))
+  (load-theme 'eink t))
 #+END_SRC
 ** ace-window
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -406,6 +406,7 @@ Workspaces using perspective
 	      ("Y" . dired-ranger-paste)))
 #+END_SRC
 * format
+Various file formats and extensions
 ** json
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle js2-mode)
@@ -773,6 +774,7 @@ Workspaces using perspective
 	  org-hide-leading-stars t
 	  org-startup-indented t
 	  org-replace-disputed-keys nil
+	  org-support-shift-select 'always
 	  org-use-speed-commands t
 	  org-refile-targets '((nil :level . 1)
 			       (org-agenda-files :level . 1))
@@ -827,8 +829,6 @@ Workspaces using perspective
 	org-src-tab-acts-natively t
 	org-src-preserve-indentation t
 	org-edit-src-content-indentation 0
-	org-confirm-babel-evaluate nil
-	org-support-shift-select 'always
 	org-confirm-babel-evaluate nil
 	org-babel-clojure-sync-nrepl-timeout nil
 	org-inline-image-overlays t)
@@ -930,13 +930,13 @@ Workspaces using perspective
 #+END_SRC
 ** ffip
 #+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle find-file-in-project)
 (defun ffip-create-pattern-file-finder (&rest patterns)
   (lexical-let ((patterns patterns))
     (lambda ()
       (interactive)
       (let ((ffip-patterns patterns))
         (find-file-in-project)))))
-
 (use-package find-file-in-project
   :config
   (setq  helm-ff-skip-boring-files t
