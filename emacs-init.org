@@ -778,6 +778,13 @@ Various file formats and extensions
   | C-c C-x - | org-timer-item |
   | M-ret     | insert-heading |
   | C-c C-x . | stop timer     |
+- agenda
+  | C-c t     | org-capture      |
+  | C-c a t   | org-agenda all   |
+  | C-c C-s   | org-schedule     |
+  | C-c C-x p | org-set-property |
+  | C-c C-e   | org-export       |
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package org
   :mode ("\\.org\\'" . org-mode)
@@ -789,6 +796,7 @@ Various file formats and extensions
 	 ("C-c C-x C-o" . org-clock-out)
 	 ("M-o" . ace-link-org))
   :config
+  (bind-key "C-c a" 'org-agenda)
   (progn
     (setq org-directory "~/src/org"
 	  org-mode-file-dir "~/src/org")
@@ -809,6 +817,20 @@ Various file formats and extensions
 					"DONE(d)"))
 	  org-M-RET-may-split-line '((item . nil))
 	  org-return-follows-link t)
+    (setq  org-use-fast-todo-selection t
+	   org-agenda-window-setup '(current-window-configuration)
+	   org-deadline-warning-days 14
+	   org-agenda-files '("~/src/org/todo.org")
+	   org-highest-priority ?A
+	   org-lowest-priority ?C
+	   org-default-priority ?A
+	   org-capture-templates '(("t" "todo" entry
+				    (file "~/src/org/todo.org")
+				    "* TODO  %?"))
+	   org-todo-keywords '((sequencep "TODO(t)"
+					  "|"
+					  "NOW(n)"
+					  "DONE(d)")))
     (add-hook 'org-mode-hook 'turn-on-font-lock)
     (add-hook 'org-mode-hook 'org-indent-mode)
     (add-hook 'org-mode-hook 'auto-fill-mode)
@@ -818,38 +840,6 @@ Various file formats and extensions
     (define-key org-mode-map [S-up] 'windmove-up)
     (define-key org-mode-map [S-down]  'windmove-down)))
 #+END_SRC
-** org-agenda
-| C-c t     | org-capture      |
-| C-c a t   | org-agenda all   |
-| C-c C-s   | org-schedule     |
-| C-c C-x p | org-set-property |
-| C-c C-e   | org-export       |
-
-Capture todo items using C-c c t
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package org-agenda
-  :mode ("\\.org\\'" . org-mode)
-  :config
-  (bind-key "C-c a" 'org-agenda)
-  :bind (:map org-mode-map
-	      ("C-cx" . org-todo-state-map))
-  (progn
-    (setq  org-use-fast-todo-selection t
-	   org-agenda-window-setup '(current-window)
-	   org-deadline-warning-days 7
-	   org-agenda-files '("~/src/org/todo.org")
-	   org-highest-priority ?A
-	   org-lowest-priority ?C
-	   org-default-priority ?A
-	   org-capture-templates '(("t" "todo" entry
-				    (file+headline "~/src/org/todo.org" "Tasks")
-				   "* TODO %?"))
-	   org-todo-keywords '((sequence "TODO(t)"
-					 "|"
-					 "NOW(n)"
-					 "DONE(d)")))))
-#+END_SRC
-*** TODO org-
 ** org-babel
 | C-c C-v   | org-bable prefix |
 | C-c C-v t | org-bable-tangle |
@@ -887,12 +877,12 @@ Capture todo items using C-c c t
   :bind (:map org-src-mode-map
 	 ("C-x C-s" . org-edit-src-exit))
   :config
-  (setq org-src-fontify-natively t
-	org-src-tab-acts-natively t
-	org-src-window-setup 'current-window
-	org-src-preserve-indentation t
-	org-edit-src-content-indentation 0
-	org-inline-image-overlays t))
+    (setq org-src-fontify-natively t
+	  org-src-tab-acts-natively t
+	  org-src-window-setup 'current-window
+	  org-src-preserve-indentation t
+	  org-edit-src-content-indentation 0
+	  org-inline-image-overlays t))
 #+END_SRC
 ** epresent
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -932,6 +922,15 @@ Capture todo items using C-c c t
 ** org-table
 |   |   |
 |   |   |
+** calfw
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle calfw)
+(use-package calfw
+  :init
+  (progn
+    (require 'calfw-cal)
+    (require 'calfw-org)))
+#+END_SRC
 
 * project
 ** vc
