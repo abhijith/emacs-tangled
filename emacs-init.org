@@ -32,12 +32,9 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 (el-get 'sync)
 #+END_SRC
 * libraries
-** use-package
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle use-package)
-#+END_SRC
 ** elisp-lib
 #+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle use-package)
 (el-get-bundle s)
 (el-get-bundle f)
 (el-get-bundle popup)
@@ -60,6 +57,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 #+END_SRC
 * meta
 ** no-littering
+keep ~/.emacs.d clean 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle no-littering)
 (use-package no-littering
@@ -80,11 +78,11 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
       delete-old-versions t)
 #+END_SRC
 ** keyboard
+Specific Key modifiers.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq ns-function-modifier 'control
       x-select-enable-clipboard t
-      echo-keystrokes 0.1
-      directory-sep-char ?/)
+      echo-keystrokes 0.1)
 #+END_SRC
 ** helm
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -101,14 +99,12 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 	helm-buffers-fuzzy-matching t
 	helm-recentf-fuzzy-match  nil
 	helm-echo-input-in-header-line nil
-	helm-ff-file-name-history-use-recentf nil
 	helm-mini-default-sources '(helm-source-buffers-list
 				    ,(if (projectile-project-p)
 					     helm-source-projectile-files-list))
 	helm-bookmark-show-location nil
 	helm-echo-input-in-header-line nil
 	helm-ff-file-name-history-use-recentf nil
-	helm-mini-default-sources '(helm-source-buffers-list)
 	helm-bookmark-show-location nil
 	helm-autoresize-max-height 30
 	helm-autoresize-min-height 20
@@ -145,10 +141,10 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 	  "\\*code"
 	  "\\*scratch"
 	  "\\*Mini")))
-
 #+END_SRC
-** guide-key
+** keybinding helper
 #+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle emacs-helm/helm-descbinds)
 (el-get-bundle guide-key)
 (use-package guide-key
   :init (guide-key-mode 1)
@@ -159,10 +155,6 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
     (setq guide-key/popup-window-position 'bottom)
     (setq guide-key/guide-key-sequence
           `("C-c" "C-x" "C-M" "C-c p" "C-h"))))
-#+END_SRC
-** help
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle emacs-helm/helm-descbinds)
 #+END_SRC
 * window
 ** no-bells-and-whistles
@@ -187,16 +179,16 @@ Disable all fancy windowing components
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (when (equal (system-name) "hodor")
-  ;;(set-frame-font "Inconsolata 14" nil t)
+  (set-frame-font "Inconsolata 14" nil t)
   (setq font-lock-maximum-decoration t)
-  (load-theme 'eink t))
+  (load-theme 'charcoal-black t))
 #+END_SRC
 ** ace-window
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle ace-window)
 (use-package ace-window
   :init
-  (bind-key "C-x o" 'ace-window))
+  (bind-key "M-p" 'ace-window))
 #+END_SRC
 ** windmove
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -766,10 +758,8 @@ Workspaces using perspective
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :bind (:map org-mode-map
-	 ("C-c !" . org-timestamp-inactive)
 	 ("C-c l" . org-store-link)
 	 ("C-c c" . org-capture)
-	 ("C-c a" . org-agenda)
 	 ("C-c b" . org-iswitchb)
 	 ("C-c C-w" . org-refile)
 	 ("C-c C-x C-o" . org-clock-out)
@@ -784,7 +774,8 @@ Workspaces using perspective
 	  org-startup-indented t
 	  org-replace-disputed-keys nil
 	  org-use-speed-commands t
-	  org-use-fast-todo-selection t
+	  org-refile-targets '((nil :level . 1)
+			       (org-agenda-files :level . 1))
 	  org-log-done 'time
 	  org-html-doctype "html5"
 	  org-todo-keywords '((sequence "TODO(t)"
@@ -801,6 +792,20 @@ Workspaces using perspective
     (define-key org-mode-map [S-left]  'windmove-left)
     (define-key org-mode-map [S-up] 'windmove-up)
     (define-key org-mode-map [S-down]  'windmove-down)))
+#+END_SRC
+** org-agenda
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package org-agenda
+  :mode ("\\.org\\'" . org-mode)
+  :bind (:map org-mode-map
+	 ("C-c a" . org-agenda))
+  :config
+  (progn
+    (setq  org-use-fast-todo-selection t
+	   org-todo-keywords '((sequence "TODO(t)"
+					 "|"
+					 "NOW(n)"
+					 "DONE(d)")))))
 #+END_SRC
 ** org-babel
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -841,9 +846,7 @@ Workspaces using perspective
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle alphapapa/helm-org-rifle)
 (use-package helm-org-rifle
-  :init
-  (setq org-refile-targets '((nil :level . 1)
-			     (org-agenda-files :level . 1)))
+  :config
   (bind-key "C-x i" (lambda ()
 		      (interactive)
 		      (helm-org-rifle-directories '("~/src/org")))))
