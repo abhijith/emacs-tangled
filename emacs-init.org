@@ -773,17 +773,22 @@ Various file formats and extensions
   | C-c C-o   | org-open-link        |
   | C-c C-q   | org-set-tags-command |
   | C-C C-c   | org-set-tags-command |
+  | C-c C-x p | org-set-property     |
 - timers
   | C-c -     | cycle-item     |
   | C-c C-x - | org-timer-item |
   | M-ret     | insert-heading |
   | C-c C-x . | stop timer     |
 - agenda
-  | C-c t     | org-capture      |
-  | C-c a t   | org-agenda all   |
-  | C-c C-s   | org-schedule     |
-  | C-c C-x p | org-set-property |
-  | C-c C-e   | org-export       |
+  | C-c c   | org-capture     |
+  | C-c a   | org-agenda-list |
+  | C-c C-s | org-schedule    |
+  | C-c C-d | org-deadline    |
+  | :       | org-set-tag     |
+  | v m     | monthly view    |
+  |         |                 |
+
+  
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package org
@@ -796,7 +801,8 @@ Various file formats and extensions
 	 ("C-c C-x C-o" . org-clock-out)
 	 ("M-o" . ace-link-org))
   :config
-  (bind-key "C-c a" 'org-agenda)
+  (bind-key "C-c a" 'org-agenda-list)
+  (bind-key "C-c c" 'org-capture)
   (progn
     (setq org-directory "~/src/org"
 	  org-mode-file-dir "~/src/org")
@@ -811,6 +817,7 @@ Various file formats and extensions
 			       (org-agenda-files :level . 1))
 	  org-log-done 'time
 	  org-html-doctype "html5"
+	  org-agenda-include-diary nil
 	  org-todo-keywords '((sequence "TODO(t)"
 					"|"
 					"NOW(n)"
@@ -824,22 +831,25 @@ Various file formats and extensions
 	   org-highest-priority ?A
 	   org-lowest-priority ?C
 	   org-default-priority ?A
-	   org-capture-templates '(("t" "todo" entry
-				    (file "~/src/org/todo.org")
-				    "* TODO  %?"))
 	   org-todo-keywords '((sequencep "TODO(t)"
 					  "|"
 					  "NOW(n)"
 					  "DONE(d)")))
+
     (add-hook 'org-mode-hook 'turn-on-font-lock)
     (add-hook 'org-mode-hook 'org-indent-mode)
     (add-hook 'org-mode-hook 'auto-fill-mode)
+    (add-hook 'org-agenda-mode-hook 'highline-mode-on)
+
     (add-hook 'before-save-hook 'org-align-all-tags nil t)
     (define-key org-mode-map [S-right] 'windmove-right)
     (define-key org-mode-map [S-left]  'windmove-left)
     (define-key org-mode-map [S-up] 'windmove-up)
     (define-key org-mode-map [S-down]  'windmove-down)))
 #+END_SRC
+
+#+RESULTS:
+
 ** org-babel
 | C-c C-v   | org-bable prefix |
 | C-c C-v t | org-bable-tangle |
@@ -866,6 +876,7 @@ Various file formats and extensions
 	org-confirm-babel-evaluate nil
 	org-plantuml-jar-path "~/.emacs.d/el-get/plantuml-mode/plantuml.jar"
 	org-inline-image-overlays t
+	org-babel-default-header-args:clojure '((:results . "silent") (:tangle . "yes"))
 	org-startup-with-inline-images t)
   (add-hook 'org-babel-after-execute-hook
 	    (lambda ()
@@ -893,7 +904,7 @@ Various file formats and extensions
 (el-get-bundle alphapapa/helm-org-rifle)
 (use-package helm-org-rifle
   :config
-  (bind-key "C-x i" (lambda ()
+  (bind-key "C-x g" (lambda ()
 		      (interactive)
 		      (helm-org-rifle-directories '("~/src/org")))))
 #+END_SRC
@@ -1000,7 +1011,7 @@ Various file formats and extensions
   (setq  helm-ff-skip-boring-files t
 	 helm-ff-search-library-in-sexp nil
 	 helm-ff-file-name-history-use-recentf nil)
-  (bind-key "C-c c" (ffip-create-pattern-file-finder "*.clj")))
+  (bind-key "C-c q" (ffip-create-pattern-file-finder "*.clj")))
 #+END_SRC
 ** git-modeline
 ** diff-hl
@@ -1244,7 +1255,6 @@ Various file formats and extensions
 ** elfeed
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle elfeed)
-(add-to-list 'load-path "/home/icylisper/.emacs.d/el-get/elfeed")
 (el-get-bundle elfeed-org)
 (defvar elfeed-show-switch-function #'switch-to-buffer)
 (defun elfeed-show-find-window ()
@@ -1447,3 +1457,9 @@ Various file formats and extensions
 (load-if-exists "~/.emacs.d/priv.el")
 #+END_SRC
 
+* quick-find
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun init ()
+  (interactive)
+  (find-file "~/.emacs.d/emacs-init.org"))
+#+END_SRC
