@@ -178,10 +178,18 @@ Disable all fancy windowing components
 ** theme
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(when (equal (system-name) "mint")
-  (set-frame-font "Inconsolata 14" nil t)
-  (setq font-lock-maximum-decoration t)
-  (load-theme 'charcoal-black t))
+(cond
+ ((equal (system-name) "mint")
+  (progn
+    (set-frame-font "Inconsolata 12" nil t)
+    (setq font-lock-maximum-decoration t)
+    (load-theme 'charcoal-black t)))
+ ((equal (system-name) "hodor")
+  (progn
+    (set-frame-font "Inconsolata 14" nil t)
+    (setq font-lock-maximum-decoration t)
+    (load-theme 'eink t))))
+
 #+END_SRC
 ** ace-window
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -790,7 +798,7 @@ Various file formats and extensions
   | :       | org-set-tag        |
   | v m     | monthly view       |
   | t       | org-set-todo-state |
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :bind (:map org-mode-map
@@ -806,7 +814,7 @@ Various file formats and extensions
   (progn
     (setq org-directory "~/src/org"
 	  org-mode-file-dir "~/src/org")
-    (setq org-tags-column 40
+    (setq org-tags-column 80
 	  org-hide-emphasis-markers t
 	  org-hide-leading-stars t
 	  org-startup-indented t
@@ -941,6 +949,16 @@ Various file formats and extensions
   (progn
     (require 'calfw-cal)
     (require 'calfw-org)))
+#+END_SRC
+** org-preview
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+(el-get-bundle org-preview-html)
+(use-package org-preview-html
+  :bind (:map org-mode-map
+	      ("C-c C-e" . org-preview-html/preview))
+  :config
+  (setq org-preview-html/htmlfilename (concat "/tmp/" (make-temp-name "-") ".html")))
+
 #+END_SRC
 
 * project
