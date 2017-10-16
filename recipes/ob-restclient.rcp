@@ -1,0 +1,4 @@
+(:name ob-restclient
+       :website "https://github.com/alf/ob-restclient.el"
+       :type github
+       :pkgname "alf/ob-restclient.el")

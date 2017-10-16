@@ -5,7 +5,7 @@
 This file is tangled using =org-babel-load-file=. What this does is
 generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 * dependencies
-  #+BEGIN_SRC bash
+  #+BEGIN_SRC sh
    curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
    sudo ln -sf ~/.cask/bin/cask /usr/local/bin/cask
    sudo apt-get install libpng-dev libz-dev libpoppler-glib-dev libpoppler-private-dev
@@ -178,10 +178,18 @@ Disable all fancy windowing components
 ** theme
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(when (equal (system-name) "hodor")
-  (set-frame-font "Inconsolata 14" nil t)
-  (setq font-lock-maximum-decoration t)
-  (load-theme 'eink t))
+(cond
+ ((equal (system-name) "mint")
+  (progn
+    (set-frame-font "Inconsolata 12" nil t)
+    (setq font-lock-maximum-decoration t)
+    (load-theme 'charcoal-black t)))
+ ((equal (system-name) "hodor")
+  (progn
+    (set-frame-font "Inconsolata 14" nil t)
+    (setq font-lock-maximum-decoration t)
+    (load-theme 'eink t))))
+
 #+END_SRC
 ** ace-window
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -534,7 +542,10 @@ Various file formats and extensions
   (show-paren-mode 1))
 #+END_SRC
 ** slime
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+(use-package lisp-mode
+  :mode ("\\.lisp$" "\\.cl$" "stumpwmrc"))
+
 (el-get-bundle slime)
 (use-package slime
   :commands (slime slime-lisp-mode-hook)
@@ -600,7 +611,7 @@ Various file formats and extensions
 	cider-repl-tab-command #'indent-for-tab-command
 	cider-repl-pop-to-buffer-on-connect nil
 	cider-repl-history-size 1000
-	cider-repl-history-file "~/.emacs.d/cider.txt"
+	cider-repl-history-file "~/.emacs.d/var/cider.txt"
 	cider-repl-result-prefix "=> "
 	cider-repl-display-in-current-window t
 	cider-repl-wrap-history nil
@@ -616,8 +627,8 @@ Various file formats and extensions
 	cider-switch-to-repl-command 'cider-switch-to-current-repl-buffer
 	cider-font-lock-dynamically nil
 	cider-popup-stacktraces t
-	;cider-test-items-background-color "Grey15"
-	;cider-stacktrace-frames-background-color "Grey15"
+	cider-test-items-background-color "Grey15"
+	cider-stacktrace-frames-background-color "Grey15"
 	cider-test-show-report-on-success t)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
   (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
@@ -729,8 +740,8 @@ Various file formats and extensions
   (sml/setup)
   (setq sml/no-confirm-load-theme t
 	sml/vc-mode-show-backend t
-	sml/mode-width 10
-	sml/name-width 20
+	;sml/mode-width 10
+	;sml/name-width 20
 	resize-mini-windows nil)
   (sml/apply-theme nil)
   :config
@@ -780,17 +791,14 @@ Various file formats and extensions
   | M-ret     | insert-heading |
   | C-c C-x . | stop timer     |
 - agenda
-  | C-c c   | org-capture     |
-  | C-c a   | org-agenda-list |
-  | C-c C-s | org-schedule    |
-  | C-c C-d | org-deadline    |
-  | :       | org-set-tag     |
-  | v m     | monthly view    |
-  |         |                 |
-
-  
-
-#+BEGIN_SRC emacs-lisp :tangle yes
+  | C-c c   | org-capture        |
+  | C-c a   | org-agenda-list    |
+  | C-c C-s | org-schedule       |
+  | C-c C-d | org-deadline       |
+  | :       | org-set-tag        |
+  | v m     | monthly view       |
+  | t       | org-set-todo-state |
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :bind (:map org-mode-map
@@ -806,7 +814,7 @@ Various file formats and extensions
   (progn
     (setq org-directory "~/src/org"
 	  org-mode-file-dir "~/src/org")
-    (setq org-tags-column 40
+    (setq org-tags-column 80
 	  org-hide-emphasis-markers t
 	  org-hide-leading-stars t
 	  org-startup-indented t
@@ -854,6 +862,7 @@ Various file formats and extensions
 | C-c C-v   | org-bable prefix |
 | C-c C-v t | org-bable-tangle |
 #+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle ob-restclient)
 (use-package ob
   :init
   (require 'ob)
@@ -870,7 +879,8 @@ Various file formats and extensions
      (ditaa . t)
      (plantuml . t)
      (clojure . t)
-     (dot . t)))
+     (dot . t)
+     (restclient . t)))
   (setq org-babel-clojure-backend 'cider
 	org-babel-clojure-sync-nrepl-timeout nil
 	org-confirm-babel-evaluate nil
@@ -885,8 +895,6 @@ Various file formats and extensions
   (add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj")))
 
 (use-package org-src
-  :bind (:map org-src-mode-map
-	 ("C-x C-s" . org-edit-src-exit))
   :config
     (setq org-src-fontify-natively t
 	  org-src-tab-acts-natively t
@@ -941,6 +949,16 @@ Various file formats and extensions
   (progn
     (require 'calfw-cal)
     (require 'calfw-org)))
+#+END_SRC
+** org-preview
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+(el-get-bundle org-preview-html)
+(use-package org-preview-html
+  :bind (:map org-mode-map
+	      ("C-c C-e" . org-preview-html/preview))
+  :config
+  (setq org-preview-html/htmlfilename (concat "/tmp/" (make-temp-name "-") ".html")))
+
 #+END_SRC
 
 * project
@@ -1448,6 +1466,9 @@ Various file formats and extensions
   :mode ("\\.http\\'" . restclient-mode))
 #+END_SRC
 ** mu4e
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle mu4e)
+#+END_SRC
 * secrets
 ** load-priv-file
 #+BEGIN_SRC emacs-lisp  :tangle yes
