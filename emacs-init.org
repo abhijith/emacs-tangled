@@ -385,6 +385,7 @@ Workspaces using perspective
   (define-key dired-mode-map [left]  'dired-up-directory)
   (define-key dired-mode-map [right] 'dired-view-file))
 (add-hook 'dired-mode-hook 'dired-lynx-keybindings)
+(add-hook 'dired-mode-hook #'highline-mode-on)
 #+END_SRC
 ** dired-x
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -943,6 +944,13 @@ Various file formats and extensions
     (setq org-tags-exclude-from-inheritence '("crypt")
 	  org-crypt-key nil)))
 #+END_SRC
+** org-passwords
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle org-passwords)
+(use-package org-passwords
+  :config
+  (setq org-passwords-file "~/src/org/passwords.org"))
+#+END_SRC
 ** org-gcal
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle org-gcal)
@@ -1339,7 +1347,7 @@ Various file formats and extensions
 	elfeed-show-switch-function #'elfeed-show-in-other-buffer
 	elfeed-show-truncate-long-urls t
 	elfeed-sort-order 'descending
-	rmh-elfeed-org-files '("~/src/org/elfeed.org")))
+	rmh-elfeed-org-files '("~/src/org/feeds.org")))
 #+END_SRC
 ** dictionary
 #+BEGIN_SRC emacs-lisp :tangle yes
