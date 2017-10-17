@@ -340,7 +340,8 @@ Workspaces using perspective
 (use-package wdired
   :bind (:map dired-mode-map
 	      ("r" . wdired-change-to-wdired-mode))
-  :init
+  :config
+  (setq directory-sep-char ?/)
   (add-hook 'dired-load-hook
 	    (lambda ()
 	      (load "dired-x")
