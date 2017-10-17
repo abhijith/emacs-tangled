@@ -1097,7 +1097,6 @@ Various file formats and extensions
       (magit-dont-ignore-whitespace)
     (magit-ignore-whitespace)))
 #+END_SRC
-** magit-identities
 ** magit-filenotify
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle magit-filenotify)
@@ -1488,12 +1487,12 @@ Various file formats and extensions
 (el-get-bundle mu4e)
 #+END_SRC
 * secrets
-** load-priv-file
+** load-secrets
 #+BEGIN_SRC emacs-lisp  :tangle yes
 (defun load-if-exists (file)
   (when (file-exists-p file)
     (load-file file)))
-(load-if-exists "~/.emacs.d/priv.el")
+(load-if-exists "~/.emacs.d/secret.el")
 #+END_SRC
 
 * quick-find
