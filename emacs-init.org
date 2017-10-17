@@ -927,25 +927,25 @@ Various file formats and extensions
 #+END_SRC
 ** org-rifle
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle alphapapa/helm-org-rifle)
+(el-get-bundle helm-org-rifle)
 (use-package helm-org-rifle
   :config
   (bind-key "C-x g" (lambda ()
 		      (interactive)
 		      (helm-org-rifle-directories '("~/src/org")))))
 #+END_SRC
-** org-passwords
+** org-crypt
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package org-crypt
+  :config
+  (progn
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritence '("crypt")
+	  org-crypt-key nil)))
+#+END_SRC
 ** org-gcal
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle org-gcal)
-#+END_SRC
-** org-nav
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle facetframer/orgnav)
-(use-package orgnav
-  :init
-  (progn
-    (require 'orgnav)))
 #+END_SRC
 ** org-links
 #+BEGIN_SRC emacs-lisp
@@ -955,18 +955,6 @@ Various file formats and extensions
 	     '(("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))
 	       ("\\.epub\\'" . (lambda (file link) (org-ebook-open link)))))
 (add-hook 'pdf-view-mode-hook #'(lambda () (require 'org-pdfview)))
-#+END_SRC
-** org-table
-|   |   |
-|   |   |
-** calfw
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle calfw)
-(use-package calfw
-  :init
-  (progn
-    (require 'calfw-cal)
-    (require 'calfw-org)))
 #+END_SRC
 ** org-preview
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent
