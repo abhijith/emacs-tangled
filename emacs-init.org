@@ -906,9 +906,24 @@ Various file formats and extensions
 	  org-edit-src-content-indentation 0
 	  org-inline-image-overlays t))
 #+END_SRC
-** epresent
+** org-present
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle epresent)
+(el-get-bundle org-present)
+(use-package org-present
+  :config
+  (progn
+    (add-hook 'org-present-mode-hook
+	      (lambda ()
+		(org-present-big)
+		(org-display-inline-images)
+		(org-present-hide-cursor)
+		(org-present-read-only)))
+    (add-hook 'org-present-mode-quit-hook
+	      (lambda ()
+		(org-present-small)
+		(org-remove-inline-images)
+		(org-present-show-cursor)
+		(org-present-read-write)))))
 #+END_SRC
 ** org-rifle
 #+BEGIN_SRC emacs-lisp :tangle yes
