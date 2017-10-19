@@ -1,0 +1,4 @@
+(:name dusk-theme
+       :description "dusk theme"
+       :type http
+       :url "https://raw.githubusercontent.com/abhijith/emacs-config/master/themes/dusk-theme.el")

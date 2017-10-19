@@ -183,6 +183,8 @@ Disable all fancy windowing components
 ** theme
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/dusk-theme")
+(el-get-bundle dusk-theme)
 (cond
  ((equal (system-name) "mint")
   (progn
@@ -193,8 +195,8 @@ Disable all fancy windowing components
   (progn
     (set-frame-font "Inconsolata 14" nil t)
     (setq font-lock-maximum-decoration t)
-    (load-theme 'eink t))))
-
+    (load-theme 'dusk t)))
+ (t (load-theme 'dusk t)))
 #+END_SRC
 ** ace-window
 #+BEGIN_SRC emacs-lisp :tangle yes
