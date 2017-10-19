@@ -1,3 +1,5 @@
+-*- coding: utf-8 -*-
+
 #+AUTHOR: icylisper
 #+TITLE: Tangled Emacs Configuration
 
@@ -14,6 +16,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
   #+END_SRC
 * debugging
 #+BEGIN_SRC emacs-lisp :tangle yes
+(set-language-environment "UTF-8")
 (toggle-debug-on-error nil)
 (toggle-debug-on-error nil)
 #+END_SRC
