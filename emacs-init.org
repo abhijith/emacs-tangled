@@ -479,8 +479,7 @@ Various file formats and extensions
   :init
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
   :config
-  (setq nov-text-width 80
-	visual-fill-column-center-text t))
+  (setq visual-fill-column-center-text t))
 #+END_SRC
 ** md
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -813,7 +812,7 @@ Various file formats and extensions
 	 ("C-c C-x C-o" . org-clock-out)
 	 ("M-o" . ace-link-org))
   :config
-  (bind-key "C-c a" 'org-agenda-list)
+  (bind-key "C-c a" 'org-agenda)
   (bind-key "C-c c" 'org-capture)
   (progn
     (setq org-directory "~/src/org"
