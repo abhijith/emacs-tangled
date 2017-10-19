@@ -319,15 +319,6 @@ Workspaces using perspective
   (add-hook 'after-load-functions 'smex-update-after-load)
   :bind (("M-z" . smex)))
 
-(defadvice smex (around space-inserts-hyphen activate compile)
-  (let ((ido-cannot-complete-command
-	 `(lambda ()
-	    (interactive)
-	    (if (string= " " (this-command-keys))
-		(insert ?-)
-	      (funcall ,ido-cannot-complete-command)))))
-    ad-do-it))
-
 (define-key minibuffer-local-completion-map '[tab] 'minibuffer-complete)
 (define-key minibuffer-local-completion-map '[spc] 'minibuffer-complete-word)
 (define-key minibuffer-local-must-match-map '[tab] 'minibuffer-complete)
