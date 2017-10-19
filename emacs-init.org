@@ -1208,11 +1208,6 @@ Various file formats and extensions
   :config
   (setq proced-auto-update-flag t))
 #+END_SRC
-** htop
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package neato-graph-bar
-  :ensure t)
-#+END_SRC
 ** ssh
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle ssh)
