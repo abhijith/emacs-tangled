@@ -425,7 +425,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(outline-7                                        ((t (:foreground ,color-7))))
    `(outline-8                                        ((t (:foreground ,color-7))))
    ;; perspective
-   `(persp-selected-face                              ((t (:foreground "springreen3"))))
+   `(persp-selected-face                              ((t (:foreground "#517FA6" :bold t))))
    ;; rainbow-delimiters
    `(rainbow-delimiters-depth-1-face                  ((t (:foreground "gray35"))))
    `(rainbow-delimiters-depth-2-face                  ((t (:foreground "gray35"))))
