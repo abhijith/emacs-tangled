@@ -196,7 +196,7 @@ Disable all fancy windowing components
   (progn
     (set-frame-font "Inconsolata 14" nil t)
     (setq font-lock-maximum-decoration t)
-    (load-theme 'tao-yin t)))
+    (load-theme 'charcoal-black t)))
  (t (load-theme 'dusk t)))
 #+END_SRC
 ** ace-window
@@ -570,7 +570,7 @@ Various file formats and extensions
 (el-get-bundle edn)
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package clojure-mode
-  :mode ("\\.edn$" "\\.clj[sx]?$" "Irminfile")
+  :mode ("\\.edn$" "\\.clj[sx]?$" "Irminfile" "\\.boot$")
   :config
   (add-hook 'clojure-mode-hook
         (lambda ()
