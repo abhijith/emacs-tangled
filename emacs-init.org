@@ -64,6 +64,8 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 ** no-littering
 keep ~/.emacs.d clean
 #+BEGIN_SRC emacs-lisp :tangle yes
+(setq warning-minimum-level :emergency)
+(setq initial-scratch-message ";; Happy Hacking")
 (el-get-bundle no-littering)
 (use-package no-littering
   :init
