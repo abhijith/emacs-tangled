@@ -1,0 +1,4 @@
+(:name org-projectile
+       :website "https://github.com/IvanMalison/org-projectile"
+       :type github
+       :pkgname "IvanMalison/org-projectile")
