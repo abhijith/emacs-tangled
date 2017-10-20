@@ -183,6 +183,7 @@ Disable all fancy windowing components
 ** theme
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'load-path "~/.emacs.d/themes")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/dusk-theme")
 (el-get-bundle dusk-theme)
 (cond
@@ -195,7 +196,7 @@ Disable all fancy windowing components
   (progn
     (set-frame-font "Inconsolata 14" nil t)
     (setq font-lock-maximum-decoration t)
-    (load-theme 'dusk t)))
+    (load-theme 'tao-yin t)))
  (t (load-theme 'dusk t)))
 #+END_SRC
 ** ace-window
@@ -206,6 +207,7 @@ Disable all fancy windowing components
   (bind-key "M-p" 'ace-window))
 #+END_SRC
 ** windmove
+| shift-<left/right> | windmove |
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package windmove
   :config
@@ -530,14 +532,6 @@ Various file formats and extensions
   (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode)
-  (set-face-foreground 'rainbow-delimiters-depth-1-face "gray35")
-  (set-face-foreground 'rainbow-delimiters-depth-2-face "gray35")
-  (set-face-foreground 'rainbow-delimiters-depth-3-face "gray35")
-  (set-face-foreground 'rainbow-delimiters-depth-4-face "gray35")
-  (set-face-foreground 'rainbow-delimiters-depth-5-face "gray35")
-  (set-face-foreground 'rainbow-delimiters-depth-6-face "gray35")
-  (set-face-foreground 'rainbow-delimiters-depth-7-face "gray35")
-  (set-face-foreground 'rainbow-delimiters-depth-8-face "gray35")
   (show-paren-mode 1))
 #+END_SRC
 ** slime
