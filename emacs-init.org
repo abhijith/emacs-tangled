@@ -856,6 +856,7 @@ Various file formats and extensions
 | C-c C-v t | org-bable-tangle |
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle ob-restclient)
+(el-get-bundle restclient)
 (use-package ob
   :init
   (require 'ob)
@@ -1114,6 +1115,8 @@ Various file formats and extensions
 * rust
 ** rust-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle rust-racer)
+(el-get-bundle emacs-racer)
 (el-get-bundle rust-mode)
 (el-get-bundle cargo)
 (el-get-bundle flycheck-rust)
@@ -1122,18 +1125,24 @@ Various file formats and extensions
   :mode ("\\.rs$" . rust-mode)
   :config
   (progn
-    (setq compile-command "cargo run")
+    (setq compile-command "cargo build")
+    (setq rust-format-on-save t)
+    (setq company-tooltip-align-annotations t)
+    (setq racer-rust-src-path "~/repo/srcs-and-packages/rust/src")
+
     (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'rust-mode-hook 'cargo-minor-mode))
-  :bind (:map rust-mode-map
-	      ("C-c C-k" . cargo-process-run)))
+    (add-hook 'racer-mode-hook #'flycheck-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'racer-mode-hook #'company-mode)
+    (add-hook 'racer-mode-hook #'cargo-minor-mode)
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+    (add-hook 'rust-mode-hook
+	      (lambda ()
+		(local-set-key (kbd "C-c <tab>") 'rust-format-buffer)))
+    (define-key rust-mode-map (kbd "TAB") 'company-indent-or-complete-common)))
+
 #+END_SRC
-** rust-fmt
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package rustfmt
-  :config
-  (define-key rust-mode-map (kbd "C-c C-f") #'rustfmt-format-buffer))
-#+END_SRC
+
 * shell
 ** comint
 #+BEGIN_SRC emacs-lisp :tangle yes
