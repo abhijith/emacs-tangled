@@ -1123,36 +1123,54 @@ Various file formats and extensions
   (autoload 'circleci "circleci" "Show CI build output" t))
 #+END_SRC
 * rust
+** deps
+#+BEGIN_SRC sh
+curl https://sh.rustup.rs -sSf | sh
+cargo install racer
+cargo install rustfmt
+export RUST_SRC_PATH=
+#+END_SRC
 ** rust-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle rust-racer)
-(el-get-bundle emacs-racer)
 (el-get-bundle rust-mode)
-(el-get-bundle cargo)
-(el-get-bundle flycheck-rust)
-
 (use-package rust-mode
   :mode ("\\.rs$" . rust-mode)
   :config
   (progn
-    (setq compile-command "cargo build")
     (setq rust-format-on-save t)
-    (setq company-tooltip-align-annotations t)
-    (setq racer-rust-src-path "~/repo/srcs-and-packages/rust/src")
-
+    (add-hook 'rust-mode-hook
+	      (lambda ()
+		(local-set-key (kbd "C-c <tab>") 'rust-format-buffer)))))
+#+END_SRC
+** flycheck-rust
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle flycheck-rust)
+(use-package flycheck-rust
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+#+END_SRC
+** cargo
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle cargo)
+(use-package cargo
+  :config
+  (add-hook 'rust-mode-hook 'cargo-minor-mode)
+  (setq compile-command "cargo build"))
+#+END_SRC
+** racer-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (getenv "RUST_SRC_PATH")
+  (el-get-bundle rust-racer)
+  (el-get-bundle emacs-racer)
+  (use-package racer-mode
+    :config
+    (setq racer-rust-src-path (getenv "RUST_SRC_PATH"))
     (add-hook 'rust-mode-hook #'racer-mode)
     (add-hook 'racer-mode-hook #'flycheck-mode)
     (add-hook 'racer-mode-hook #'eldoc-mode)
     (add-hook 'racer-mode-hook #'company-mode)
-    (add-hook 'racer-mode-hook #'cargo-minor-mode)
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-    (add-hook 'rust-mode-hook
-	      (lambda ()
-		(local-set-key (kbd "C-c <tab>") 'rust-format-buffer)))
-    (define-key rust-mode-map (kbd "TAB") 'company-indent-or-complete-common)))
-
+    (add-hook 'racer-mode-hook #'cargo-minor-mode)))
 #+END_SRC
-
 * shell
 ** comint
 #+BEGIN_SRC emacs-lisp :tangle yes
