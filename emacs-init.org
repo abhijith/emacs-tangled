@@ -1170,7 +1170,6 @@ export RUST_SRC_PATH=
     (add-hook 'rust-mode-hook #'racer-mode)
     (add-hook 'racer-mode-hook #'flycheck-mode)
     (add-hook 'racer-mode-hook #'eldoc-mode)
-    (add-hook 'racer-mode-hook #'company-mode)
     (add-hook 'racer-mode-hook #'cargo-minor-mode)))
 #+END_SRC
 * shell
