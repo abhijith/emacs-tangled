@@ -502,8 +502,13 @@ Various file formats and extensions
   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
   (show-paren-mode 1))
 #+END_SRC
+
+#+RESULTS:
+: t
+
 ** slime
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent
 (use-package lisp-mode
@@ -542,19 +547,8 @@ Various file formats and extensions
 (use-package clojure-mode
   :mode ("\\.edn$" "\\.clj[sx]?$" "Irminfile" "\\.boot$")
   :config
-  (defun tweak-clojure-syntax ()
-    (mapcar (lambda (x) (font-lock-add-keywords nil x))
-	    '((("#?['`]*(\\|)"       . 'clojure-parens))
-	      (("#?\\^?{\\|}"        . 'clojure-brackets))
-	      (("\\[\\|\\]"          . 'clojure-braces))
-	      ((":\\w+"              . 'clojure-keyword))
-	      (("#?\""               0 'clojure-double-quote prepend))
-	      (("nil\\|true\\|false\\|%[1-9]?" . 'clojure-special))
-	      (("(\\(\\.[^ \n)]*\\|[^ \n)]+\\.\\|new\\)\\([ )\n]\\|$\\)" 1 'clojure-java-call)))))
-
   (add-hook 'clojure-mode-hook
 	    (lambda ()
-	      (tweak-clojure-syntax)
 	      (push '("fn" . ?λ) prettify-symbols-alist)))
   (setq clojure-align-forms-automatically t
 	comment-column 70)
