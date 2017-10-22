@@ -435,43 +435,6 @@ Various file formats and extensions
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle toml-mode)
 #+END_SRC
-** pdf
-#+BEGIN_SRC emacs-lisp :tangle yes
-(when (or (file-exists-p "/usr/local/bin/cask")
-	  (file-exists-p "~/.cask/bin/cask"))
-  (el-get-bundle pdf-tools)
-  (use-package pdf-tools
-    :config
-    (pdf-tools-install)
-    (require 'org-pdfview)
-    (bind-keys :map pdf-view-mode-map
-	       ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
-	       ("g"  . pdf-view-first-page)
-	       ("G"  . pdf-view-last-page)
-	       ("l"  . image-forward-hscroll)
-	       ("h"  . image-backward-hscroll)
-	       ("j"  . pdf-view-next-page)
-	       ("k"  . pdf-view-previous-page)
-	       ("e"  . pdf-view-goto-page)
-	       ("u"  . pdf-view-revert-buffer)
-	       ("al" . pdf-annot-list-annotations)
-	       ("ad" . pdf-annot-delete)
-	       ("aa" . pdf-annot-attachment-dired)
-	       ("am" . pdf-annot-add-markup-annotation)
-	       ("at" . pdf-annot-add-text-annotation)
-	       ("y"  . pdf-view-kill-ring-save)
-	       ("i"  . pdf-misc-display-metadata)
-	       ("s"  . pdf-occur)
-	       ("b"  . pdf-view-set-slice-from-bounding-box)
-	       ("r"  . pdf-view-reset-slice)))
-  (use-package pdf-view
-    :config
-    (setq-default pdf-view-display-size 'fit-page)
-    (add-hook 'pdf-view-mode-hook #'pdf-view-fit-page-to-window)
-    (setq-default pdf-view-display-size 'fit-page)
-    (setq pdf-view-resize-factor 1.10
-	  doc-view-resolution 200)))
-#+END_SRC
 ** epub
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle nov)
