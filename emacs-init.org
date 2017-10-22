@@ -13,6 +13,11 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
    sudo apt-get install libpng-dev libz-dev libpoppler-glib-dev libpoppler-private-dev
    sudo apt-get install libgmime-2.6-0 libgmime-2.6-dev gmime-bin autoconf-archive
    sudo apt-get install xapian-tools libxapian-1.3-5
+   curl https://sh.rustup.rs -sSf | sh
+   export RUST_SRC_PATH=/to/rust/src
+   cargo install racer
+   cargo install rustfmt
+   cargo install ripgrep
   #+END_SRC
 * debugging
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -998,6 +1003,13 @@ Various file formats and extensions
   (eval-after-load 'helm
     '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm)))
 #+END_SRC
+** ripgrep
+#+BEGIN_SRC emacs-lisp tangle :yes
+(el-get-bundle rg)
+(use-package rg
+  :config
+  (bind-key "C-c r" 'rg-project))
+#+END_SRC
 ** ffip
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle find-file-in-project)
@@ -1092,13 +1104,6 @@ Various file formats and extensions
   (autoload 'circleci "circleci" "Show CI build output" t))
 #+END_SRC
 * rust
-** deps
-#+BEGIN_SRC sh
-curl https://sh.rustup.rs -sSf | sh
-cargo install racer
-cargo install rustfmt
-export RUST_SRC_PATH=
-#+END_SRC
 ** rust-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle rust-mode)

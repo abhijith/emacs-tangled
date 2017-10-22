@@ -1,0 +1,4 @@
+(:name rg
+       :website "https://github.com/dajva/rg.el"
+       :type github
+       :pkgname "dajva/rg.el")
