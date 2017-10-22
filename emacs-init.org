@@ -363,6 +363,7 @@ Workspaces using perspective
 #+END_SRC
 ** dired-subtree
 #+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle dired-hacks)
 (use-package dired-subtree
   :bind (:map dired-mode-map
 	      ("<tab>" . dired-subtree-cycle)
