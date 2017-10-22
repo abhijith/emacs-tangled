@@ -196,7 +196,7 @@ Disable all fancy windowing components
 (cond
  ((equal (system-name) "mint")
   (progn
-    (set-frame-font "Inconsolata 12" nil t)
+    (set-frame-font "Inconsolata 14" nil t)
     (setq font-lock-maximum-decoration t)
     (load-theme 'charcoal-black t)))
  ((equal (system-name) "hodor")
