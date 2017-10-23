@@ -836,6 +836,7 @@ Various file formats and extensions
 | C-c C-v t | org-bable-tangle |
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle ob-restclient)
+(el-get-bundle ob-rust)
 (el-get-bundle restclient)
 (use-package ob
   :init
@@ -854,6 +855,7 @@ Various file formats and extensions
      (plantuml . t)
      (clojure . t)
      (dot . t)
+     (rust . t)
      (restclient . t)))
   (setq org-babel-clojure-backend 'cider
 	org-babel-clojure-sync-nrepl-timeout nil

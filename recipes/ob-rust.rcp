@@ -1,0 +1,4 @@
+(:name ob-rust
+       :website "https://github.com/micanzhang/ob-rust"
+       :type github
+       :pkgname "micanzhang/ob-rust")
