@@ -235,6 +235,9 @@ Workspaces using perspective
   :config
   (setq persp-modestring-dividers '("(" ")" "|")
 	persp-mode-prefix-key (kbd "s-x"))
+  (if (eq window-system 'x)
+      (shell-command "xmodmap -e 'clear Lock' -e 'keycode 66 = F13'"))
+  (bind-key [f13] 'persp-switch)
   (bind-key [s-c] 'persp-switch)
   (bind-key [s-right] 'persp-next)
   (bind-key [s-left] 'persp-prev))
@@ -980,9 +983,6 @@ Various file formats and extensions
 	projectile-require-project-root t
 	projectile-mode-line '(:eval (format " (%s)" (projectile-project-name)))
 	projectile-sort-order 'modification-time)
-  (if (eq window-system 'x)
-      (shell-command "xmodmap -e 'clear Lock' -e 'keycode 66 = F13'"))
-  (bind-key [f13] 'projectile-switch-project)
   :bind (("C-c f" . helm-projectile-find-file)
   	 ("C-c D" . projectile-dired)
          ("C-c !" . projectile-run-command-in-root)
