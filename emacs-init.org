@@ -968,7 +968,7 @@ Various file formats and extensions
   :defer (projectile-cleanup-known-projects)
   :diminish projectile-mode
   :config
-  (setq projectile-switch-project-action 'projectile-dired
+  (setq projectile-switch-project-action 'projectile-find-file
 	projectile-find-dir-includes-top-level t
 	projectile-remember-window-configs t
 	projectile-keymap-prefix (kbd "C-c p")
