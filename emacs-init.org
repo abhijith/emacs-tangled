@@ -257,6 +257,7 @@ Workspaces using perspective
 	    (font-lock-add-keywords
 	     nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
 		    1 font-lock-warning-face t)))))
+(add-to-list 'write-file-functions 'delete-trailing-whitespace)
 (auto-revert-mode 1)
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
