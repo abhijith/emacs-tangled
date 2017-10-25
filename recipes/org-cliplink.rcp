@@ -1,0 +1,4 @@
+(:name org-cliplink
+       :website "https://github.com/rexim/org-cliplink"
+       :type github
+       :pkgname "rexim/org-cliplink")

@@ -18,6 +18,7 @@ C-x to switch major modes
 | C-x f | switch-to-elfeed-buffer     |
 | C-x g | helm-org-rifle              |
 | C-x j | erc/slack/jabber selector   |
+| C-x l | org-cliplink (bookmarks)    |
 | C-x m | mu4e                        |
 | C-x o | switch-window               |
 | C-x p | projectile-switch           |
@@ -993,7 +994,13 @@ Various file formats and extensions
   (setq org-preview-html/htmlfilename (concat "/tmp/" (make-temp-name "-") ".html")))
 
 #+END_SRC
-
+** org-cliplink
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle org-cliplink)
+(use-package org-cliplink
+  :config
+  (bind-key (kbd "C-x l") 'org-cliplink))
+#+END_SRC
 * project
 ** vc
 #+BEGIN_SRC emacs-lisp :tangle yes
