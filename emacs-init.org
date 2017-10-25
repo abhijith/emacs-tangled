@@ -14,23 +14,24 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 
 C-x to switch major modes
 
-| C-x a | abbrev                      |
-| C-x b | helm-mini  (global buffers) |
-| C-x c | helm-command-prefix         |
-| C-x d | dictionary-search           |
-| C-x f | switch-to-elfeed-buffer     |
-| C-x g | helm-org-rifle              |
-| C-x i | helm-info                   |
-| C-x j | erc/slack/jabber selector   |
-| C-x k | kill-this-buffer            |
-| C-x l | magit-list-repositories     |
-| C-x m | mu4e                        |
-| C-x o | switch-window               |
-| C-x p | projectile-switch           |
-| C-x r | register                    |
-| C-x u | undo-tree (buffer-local)    |
-| C-x w | persp-switch                |
-| C-x / | engine-mode                 |
+| C-x a | abbrev                         |
+| C-x b | helm-mini  (global buffers)    |
+| C-x c | helm-command-prefix            |
+| C-x d | dictionary-search              |
+| C-x f | switch-to-elfeed-buffer        |
+| C-x g | helm-org-rifle                 |
+| C-x i | helm-info                      |
+| C-x j | erc/slack/jabber selector      |
+| C-x k | kill-this-buffer               |
+| C-x l | magit-list-repositories        |
+| C-x m | mu4e                           |
+| C-x o | switch-window                  |
+| C-x p | projectile-switch-project      |
+| C-x p | projectile-switch-open-project |
+| C-x r | register                       |
+| C-x u | undo-tree (buffer-local)       |
+| C-x w | persp-switch                   |
+| C-x / | engine-mode                    |
 
 C-c for buffer or project-local commands
 
@@ -1095,7 +1096,8 @@ Various file formats and extensions
 	 ("C-c t" . projectile-run-shell)
 	 ("C-x RET" . projectile-run-shell)
   	 ("C-c b" . helm-projectile-switch-to-buffer)
-	 ("C-x p" . projectile-switch-project)))
+	 ("C-x P" . projectile-switch-project)
+	 ("C-x p" . projectile-switch-open-project)))
 #+END_SRC
 ** ripgrep
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1261,6 +1263,7 @@ Various file formats and extensions
 	    (define-key shell-mode-map (kbd "C-r") 'helm-comint-input-ring)
 	    (define-key shell-mode-map (kbd "M-r") 'helm-comint-input-ring)
             (define-key shell-mode-map (kbd "C-l") 'comint-clear-buffer)))))
+
 (add-to-list 'exec-path "/usr/local/bin")
 
 (use-package shell
