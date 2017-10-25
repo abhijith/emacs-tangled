@@ -1134,13 +1134,6 @@ Various file formats and extensions
 (el-get-bundle github-clone)
 (el-get-bundle helm-open-github)
 #+END_SRC
-** circleci
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle circleci)
-(use-package circleci
-  :init
-  (autoload 'circleci "circleci" "Show CI build output" t))
-#+END_SRC
 * rust
 ** rust-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
