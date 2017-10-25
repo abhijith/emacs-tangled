@@ -288,7 +288,13 @@ Workspaces using perspective
 (use-package switch-window
   :config
   (bind-key "C-x o" 'switch-window))
-
+#+END_SRC
+** zygospore
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle zygospore)
+(use-package zygospore
+  :config
+  (bind-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 #+END_SRC
 * buffer
 ** prog-defaults

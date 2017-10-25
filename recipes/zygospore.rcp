@@ -1,0 +1,4 @@
+(:name zygospore
+       :website "https://github.com/LouisKottmann/zygospore.el"
+       :type github
+       :pkgname "LouisKottmann/zygospore.el")
