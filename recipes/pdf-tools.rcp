@@ -1,0 +1,12 @@
+(:name pdf-tools
+       :description "pdf tools"
+       :type github
+       :minimum-emacs-version "24.3"
+       :pkgname "lueck/pdf-tools"
+       :depends (let-alist tablist)
+       :prepare (setq pdf-info-epdfinfo-program
+                      (concat (el-get-package-directory "pdf-tools")
+                              "server/epdfinfo"))
+       :build (("make"))
+       :load-path (("lisp"))
+       :compile ("lisp/"))

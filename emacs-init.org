@@ -18,7 +18,7 @@ C-x to switch major modes
 | C-x f | switch-to-elfeed-buffer     |
 | C-x g | helm-org-rifle              |
 | C-x j | erc/slack/jabber selector   |
-| C-x l | org-cliplink (bookmarks)    |
+| C-x l | magit-list-repositories     |
 | C-x m | mu4e                        |
 | C-x o | switch-window               |
 | C-x p | projectile-switch           |
@@ -477,6 +477,41 @@ Workspaces using perspective
 #+END_SRC
 * format
 Various file formats and extensions
+** pdf
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle pdf-tools)
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (require 'org-pdfview)
+  (bind-keys :map pdf-view-mode-map
+	     ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+	     ("g"  . pdf-view-first-page)
+	     ("G"  . pdf-view-last-page)
+	     ("l"  . image-forward-hscroll)
+	     ("h"  . image-backward-hscroll)
+	     ("j"  . pdf-view-next-page)
+	     ("k"  . pdf-view-previous-page)
+	     ("e"  . pdf-view-goto-page)
+	     ("u"  . pdf-view-revert-buffer)
+	     ("al" . pdf-annot-list-annotations)
+	     ("ad" . pdf-annot-delete)
+	     ("aa" . pdf-annot-attachment-dired)
+	     ("am" . pdf-annot-add-markup-annotation)
+	     ("at" . pdf-annot-add-text-annotation)
+	     ("y"  . pdf-view-kill-ring-save)
+	     ("i"  . pdf-misc-display-metadata)
+	     ("s"  . pdf-occur)
+	     ("b"  . pdf-view-set-slice-from-bounding-box)
+	     ("r"  . pdf-view-reset-slice)))
+(use-package pdf-view
+  :config
+  (setq-default pdf-view-display-size 'fit-page)
+  (add-hook 'pdf-view-mode-hook #'pdf-view-fit-page-to-window)
+  (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-view-resize-factor 1.10
+	doc-view-resolution 200))
+#+END_SRC
 ** json
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle js2-mode)
