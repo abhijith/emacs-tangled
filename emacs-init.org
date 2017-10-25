@@ -6,6 +6,47 @@
 * about
 This file is tangled using =org-babel-load-file=. What this does is
 generate a =emacs-init.el= from the =emacs-lisp= source blocks.
+* keybindings
+
+| shift left/right | windmove left/right |
+| shift up/down    | windmove up/down    |
+| hyper left/righ  | persp left/right    |
+
+C-x to switch major modes
+
+| C-x b | helm-mini  (global buffers) |
+| C-x f | switch-to-elfeed-buffer     |
+| C-x g | helm-org-rifle              |
+| C-x j | erc/slack/jabber selector   |
+| C-x m | mu4e                        |
+| C-x o | switch-window               |
+| C-x p | projectile-switch           |
+| C-x r | register                    |
+| C-x w | persp-switch                |
+| C-x / | engine-mode                 |
+
+C-c for buffer or project-local commands
+
+| C-c a | org-agenda                       |
+| C-c b | helm-projectile-switch-to-buffer |
+| C-c c | org-capture                      |
+| C-c d | magit-diff                       |
+| C-c D | projectile-dired                 |
+| C-c f | helm-projectile-find-file        |
+| C-c F | sudo-find-file                   |
+| C-c g | helm-git-grep                    |
+| C-c j | helm-imenu                       |
+| C-c k | helm-show-kill-ring              |
+| C-c l | magit-log-buffer-file            |
+| C-c L | magit-log-head                   |
+| C-c m | magit-status                     |
+| C-c n | cider-find-ns                    |
+| C-c o | magit-checkout                   |
+| C-c r | rg-project                       |
+| C-c t | projectile-run-shell             |
+| C-c ! | projectile-run-command-in-root   |
+
+
 * dependencies
   #+BEGIN_SRC sh
    curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
@@ -125,7 +166,7 @@ Specific Key modifiers.
 	helm-display-header-line nil)
   :bind (("C-c j" . helm-imenu)
 	 ("C-x b" . helm-mini)
-	 ("M-y"   . helm-show-kill-ring)))
+	 ("C-c y"   . helm-show-kill-ring)))
 
 (defun filter-dired-buffers (buffer-list)
   (delq nil (mapcar
@@ -238,7 +279,7 @@ Workspaces using perspective
   (if (eq window-system 'x)
       (shell-command "xmodmap -e 'clear Lock' -e 'keycode 66 = F13'"))
   (bind-key [f13] 'persp-switch)
-  (bind-key [s-c] 'persp-switch)
+  (bind-key "C-x w" 'persp-switch)
   (bind-key [s-right] 'persp-next)
   (bind-key [s-left] 'persp-prev))
 #+END_SRC
@@ -257,8 +298,8 @@ Workspaces using perspective
 	    (font-lock-add-keywords
 	     nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
 		    1 font-lock-warning-face t)))))
-(add-to-list 'write-file-functions 'delete-trailing-whitespace)
 (auto-revert-mode 1)
+(add-to-list 'write-file-functions 'delete-trailing-whitespace)
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
@@ -988,8 +1029,8 @@ Various file formats and extensions
   	 ("C-c D" . projectile-dired)
          ("C-c !" . projectile-run-command-in-root)
 	 ("C-c RET" . projectile-run-shell)
+	 ("C-c t" . projectile-run-shell)
 	 ("C-x RET" . projectile-run-shell)
-         ("C-c t" . projectile-find-test-file)
   	 ("C-c b" . helm-projectile-switch-to-buffer)
 	 ("C-x p" . projectile-switch-project)))
 #+END_SRC
@@ -1323,7 +1364,7 @@ Various file formats and extensions
     (require 'elfeed)
     (require 'elfeed-org)
     (elfeed-org))
-  (bind-key (kbd "C-x w") 'switch-to-elfeed-entry-buffer)
+  (bind-key (kbd "C-x f") 'switch-to-elfeed-entry-buffer)
   :bind
   (:map elfeed-search-mode-map
 	 ("?" . hydra-elfeed/body)
@@ -1401,12 +1442,12 @@ Various file formats and extensions
   (add-hook 'jabber-mode-hook
             '(lambda ()
                (variable-pitch-mode 1)))
-  :bind (("C-x C-j o" . jabber-chat-with)))
-
-(defun jabber ()
-  (interactive)
-  (jabber-connect)
-  (switch-to-buffer "*-jabber-*"))
+  (bind-key "C-x j" '(lambda ()
+		       (interactive)
+		       (progn
+			 (jabber-connect-all)
+			 (jabber-chat-with)
+			 (switch-to-buffer "*-jabber-*")))))
 
 (defun helm-jabber-online-contacts ()
   (with-no-warnings
