@@ -1034,7 +1034,7 @@ Various file formats and extensions
 (el-get-bundle org-cliplink)
 (use-package org-cliplink
   :config
-  (bind-key (kbd "C-x l") 'org-cliplink))
+  (bind-key (kbd "C-x L") 'org-cliplink))
 #+END_SRC
 * project
 ** vc
@@ -1064,7 +1064,7 @@ Various file formats and extensions
 	projectile-remember-window-configs t
 	projectile-keymap-prefix (kbd "C-c p")
 	projectile-completion-system 'helm
-	projectile-indexing-method 'alien
+	projectile-indexing-method 'native
 	projectile-enable-caching t
 	projectile-require-project-root t
 	projectile-mode-line '(:eval (format " (%s)" (projectile-project-name)))
@@ -1127,13 +1127,24 @@ Various file formats and extensions
 	magit-save-repository-buffers 'dontask
 	magit-default-tracking-name-function #'magit-default-tracking-name-branch-only)
   (add-hook 'magit-mode-hook #'highline-mode-on)
+  (setq magit-repolist-columns
+      '(("Name"       25  magit-repolist-column-ident nil)
+        ("Branch"     10  magit-repolist-column-branch)
+        ("Version"    25  magit-repolist-column-version nil)
+        ("↓P"         5   magit-repolist-column-unpulled-from-pushremote)
+        ("↑P"         5   magit-repolist-column-unpushed-to-pushremote)
+        (""           6   magit-repolist-column-dirty)
+        ("Path"       99  magit-repolist-column-path nil)))
+  (setq magit-repository-directories '(("~/src/projects" . 1)
+				       ("~/src/org" . 1)))
   :bind
   (("C-c m" . magit-status)
    ("C-c l" . magit-log-buffer-file)
    ("C-c L" . magit-log-head)
    ("C-c o" . magit-checkout)
    ("C-c d" . magit-diff-buffer-file)
-   ("C-c D" . magit-diff)))
+   ("C-c D" . magit-diff)
+   ("C-x l" . magit-list-repositories)))
 
 (defun magit-ignore-whitespace ()
   "Ignore whitespace."
