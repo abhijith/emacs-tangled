@@ -14,15 +14,21 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 
 C-x to switch major modes
 
+| C-x a | abbrev                      |
 | C-x b | helm-mini  (global buffers) |
+| C-x c | helm-command-prefix         |
+| C-x d | dictionary-search           |
 | C-x f | switch-to-elfeed-buffer     |
 | C-x g | helm-org-rifle              |
+| C-x i | helm-info                   |
 | C-x j | erc/slack/jabber selector   |
+| C-x k | kill-this-buffer            |
 | C-x l | magit-list-repositories     |
 | C-x m | mu4e                        |
 | C-x o | switch-window               |
 | C-x p | projectile-switch           |
 | C-x r | register                    |
+| C-x u | undo-tree (buffer-local)    |
 | C-x w | persp-switch                |
 | C-x / | engine-mode                 |
 
@@ -193,6 +199,13 @@ Specific Key modifiers.
 	  "\\*code"
 	  "\\*scratch"
 	  "\\*Mini")))
+#+END_SRC
+
+** info
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-info
+  :config
+  (bind-key (kbd "C-x i") 'helm-info))
 #+END_SRC
 ** guide-key
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -693,7 +706,6 @@ Various file formats and extensions
   (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
   :bind (("C-c n"  . cider-find-ns)
 	 ("C-c e"  . cider-visit-error-buffer)
-	 ("C-c h"  . cider-apropos)
 	 ("C-c M-c". cider-connect)
 	 :map cider-repl-mode-map
 	 ("C-l"    . cider-repl-clear-buffer)
@@ -1488,13 +1500,13 @@ Various file formats and extensions
    jabber-show-offline-contacts nil)
   (add-hook 'jabber-mode-hook
             '(lambda ()
+	       (highline-mode 1)
                (variable-pitch-mode 1)))
-  (bind-key "C-x j" '(lambda ()
-		       (interactive)
-		       (progn
-			 (jabber-connect-all)
-			 (jabber-chat-with)
-			 (switch-to-buffer "*-jabber-*")))))
+  (bind-key (kbd "C-x j") '(lambda ()
+			     (interactive)
+			     (progn
+			       (jabber-connect-all)
+			       (switch-to-buffer "*-jabber-*")))))
 
 (defun helm-jabber-online-contacts ()
   (with-no-warnings
