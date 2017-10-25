@@ -136,6 +136,7 @@
  `(helm-selection ((t (:background "dark slate blue" :foreground "white"))))
  `(helm-selection-line ((t (:inherit region :weight bold))))
  `(helm-match ((t (:foreground "grey" :bold t))))
+ `(helm-grep-file ((t (:foreground "pale green"))))
  `(helm-candidate-number ((t (:foreground "grey15"))))
  '(highlight ((t (:background "dark slate blue" :foreground "light blue"))))
  '(highline-face ((t (:background "dark slate blue"))))
