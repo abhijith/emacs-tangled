@@ -5,3 +5,9 @@ network-security.data
 priv.el
 url/
 var/
+emms
+smex-items
+cider.txt
+custom.el
+auto-save-list
+.cask/

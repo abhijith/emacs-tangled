@@ -1,0 +1,4 @@
+(:name helm-rg
+       :type github
+       :pkgname "microamp/helm-rg"
+       :depends helm)

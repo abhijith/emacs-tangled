@@ -34,7 +34,7 @@ C-c for buffer or project-local commands
 | C-c D | projectile-dired                 |
 | C-c f | helm-projectile-find-file        |
 | C-c F | sudo-find-file                   |
-| C-c g | helm-git-grep                    |
+| C-c g | helm-projectile-rg               |
 | C-c j | helm-imenu                       |
 | C-c k | helm-show-kill-ring              |
 | C-c l | magit-log-buffer-file            |
@@ -42,7 +42,6 @@ C-c for buffer or project-local commands
 | C-c m | magit-status                     |
 | C-c n | cider-find-ns                    |
 | C-c o | magit-checkout                   |
-| C-c r | rg-project                       |
 | C-c t | projectile-run-shell             |
 | C-c ! | projectile-run-command-in-root   |
 
@@ -194,7 +193,7 @@ Specific Key modifiers.
 	  "\\*scratch"
 	  "\\*Mini")))
 #+END_SRC
-** keybinding helper
+** guide-key
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle emacs-helm/helm-descbinds)
 (el-get-bundle guide-key)
@@ -558,10 +557,6 @@ Various file formats and extensions
   (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
   (show-paren-mode 1))
 #+END_SRC
-
-#+RESULTS:
-: t
-
 ** slime
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent
 (use-package lisp-mode
@@ -1041,24 +1036,17 @@ Various file formats and extensions
   	 ("C-c b" . helm-projectile-switch-to-buffer)
 	 ("C-x p" . projectile-switch-project)))
 #+END_SRC
-** helm-git-grep
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle helm-git-grep)
-(el-get-bundle wgrep)
-(use-package helm-git-grep
-  :init
-  (require 'helm-git-grep)
-  (global-set-key (kbd "C-c g") 'helm-git-grep)
-  (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
-  (eval-after-load 'helm
-    '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm)))
-#+END_SRC
 ** ripgrep
-#+BEGIN_SRC emacs-lisp tangle :yes
-(el-get-bundle rg)
-(use-package rg
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm-rg)
+(use-package helm-rg
   :config
-  (bind-key "C-c r" 'rg-project))
+  (bind-key (kbd "C-c g") 'helm-projectile-rg))
+#+END_SRC
+** wgrep
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle wgrep)
+(use-package wgrep)
 #+END_SRC
 ** ffip
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1371,7 +1359,6 @@ Various file formats and extensions
     (require 'elfeed)
     (require 'elfeed-org)
     (elfeed-org))
-  (bind-key (kbd "C-x f") 'switch-to-elfeed-entry-buffer)
   :bind
   (:map elfeed-search-mode-map
 	 ("?" . hydra-elfeed/body)
@@ -1385,6 +1372,7 @@ Various file formats and extensions
 	 ("r" . hydra-elfeed/lambda-r)
 	 ("g" . elfeed-update))
   :config
+  (bind-key (kbd "C-x f") 'switch-to-elfeed-entry-buffer)
   (setq-default elfeed-search-filter "@3-weeks-ago +clojure")
   (setf url-queue-timeout 30
 	elfeed-show-switch-function #'elfeed-show-in-other-buffer
