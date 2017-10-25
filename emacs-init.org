@@ -221,6 +221,24 @@ Specific Key modifiers.
     (setq guide-key/guide-key-sequence
           `("C-c" "C-x" "C-M" "C-c p" "C-h"))))
 #+END_SRC
+* workspace
+** perspective
+Workspaces using perspective
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle perspective)
+(use-package perspective
+  :init
+  (persp-mode)
+  :config
+  (setq persp-modestring-dividers '("(" ")" "|")
+	persp-mode-prefix-key (kbd "s-x"))
+  (if (eq window-system 'x)
+      (shell-command "xmodmap -e 'clear Lock' -e 'keycode 66 = F13'"))
+  (bind-key [f13] 'persp-switch)
+  (bind-key "C-x w" 'persp-switch)
+  (bind-key [s-right] 'persp-next)
+  (bind-key [s-left] 'persp-prev))
+#+END_SRC
 * window
 ** no-bells-and-whistles
 Disable all fancy windowing components
@@ -277,23 +295,6 @@ Disable all fancy windowing components
   (bind-key [S-left]  'windmove-left)
   (bind-key [S-up] 'windmove-up)
   (bind-key [S-down]  'windmove-down))
-#+END_SRC
-** perspective
-Workspaces using perspective
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle perspective)
-(use-package perspective
-  :init
-  (persp-mode)
-  :config
-  (setq persp-modestring-dividers '("(" ")" "|")
-	persp-mode-prefix-key (kbd "s-x"))
-  (if (eq window-system 'x)
-      (shell-command "xmodmap -e 'clear Lock' -e 'keycode 66 = F13'"))
-  (bind-key [f13] 'persp-switch)
-  (bind-key "C-x w" 'persp-switch)
-  (bind-key [s-right] 'persp-next)
-  (bind-key [s-left] 'persp-prev))
 #+END_SRC
 ** switch-window
 #+BEGIN_SRC emacs-lisp :tangle yes
