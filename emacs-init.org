@@ -14,7 +14,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 
 C-x to switch major modes
 
-| C-x a | abbrev                         |
+| C-x a | eww                            |
 | C-x b | helm-mini  (global buffers)    |
 | C-x c | helm-command-prefix            |
 | C-x d | dictionary-search              |
@@ -169,8 +169,7 @@ Specific Key modifiers.
 	helm-split-window-default-side 'below
 	helm-display-header-line nil)
   :bind (("C-c j" . helm-imenu)
-	 ("C-x b" . helm-mini)
-	 ("C-c y"   . helm-show-kill-ring)))
+	 ("C-x b" . helm-mini)))
 
 (defun filter-dired-buffers (buffer-list)
   (delq nil (mapcar
@@ -408,6 +407,12 @@ Disable all fancy windowing components
 (define-key minibuffer-local-completion-map '[spc] 'minibuffer-complete-word)
 (define-key minibuffer-local-must-match-map '[tab] 'minibuffer-complete)
 (define-key minibuffer-local-must-match-map '[spc] 'minibuffer-complete-word)
+#+END_SRC
+** helm-ring
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-ring
+  :bind
+  (("C-c y"   . helm-show-kill-ring)))
 #+END_SRC
 * dired
 ** wdired
@@ -1062,6 +1067,7 @@ Various file formats and extensions
   (setq vc-mistrust-permissions t
 	version-control t
         vc-initial-comment t
+	vc-follow-symlinks nil
         vc-consult-headers nil
         vc-make-backup-files t))
 #+END_SRC
@@ -1338,8 +1344,9 @@ Various file formats and extensions
 (use-package tramp
   :config
   (setq tramp-default-method "ssh"
-	tramp-auto-save-directory "~/.emacs.d/tramp-autosave-dir"
+	tramp-auto-save-directory "~/.emacs.d/var/tramp-autosave-dir"
 	password-cache-expiry 3600
+	tramp-completion-reread-directory-timeout nil
 	tramp-ssh-controlmaster-options  (concat
 					  "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
 					  "-o ControlMaster=auto -o ControlPersist=no"))
