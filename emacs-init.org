@@ -505,6 +505,7 @@ Various file formats and extensions
 ** pdf
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle pdf-tools)
+(el-get-bundle org-pdfview)
 (use-package pdf-tools
   :config
   (pdf-tools-install)
@@ -839,7 +840,7 @@ Various file formats and extensions
 (use-package battery
   :config
   (display-battery-mode))
-#+END
+#+END_SRC
 
 (el-get-invalidate-autoloads)
 * org
@@ -1593,12 +1594,8 @@ Various file formats and extensions
 (use-package restclient
   :mode ("\\.http\\'" . restclient-mode))
 #+END_SRC
-** mu4e
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle mu4e)
-#+END_SRC
-* secrets
-** load-secrets
+ * secrets
+* load-secrets
 #+BEGIN_SRC emacs-lisp  :tangle yes
 (defun load-if-exists (file)
   (when (file-exists-p file)
