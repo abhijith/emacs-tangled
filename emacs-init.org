@@ -1471,8 +1471,7 @@ Various file formats and extensions
 ** engine-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle engine-mode)
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox")
+(setq browse-url-browser-function 'eww-browse-url)
 (use-package engine-mode
   :init
   (require 'engine-mode)
