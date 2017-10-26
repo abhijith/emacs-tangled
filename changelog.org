@@ -1,0 +1,24 @@
+* [2017-10-25 Wed]
+- Added exwm (the emacs window manager) - bleeding branch
+- Add zygospore (restore C-x 1)
+- ace-link in eww ('M')
+- eww is default browser
+- Add ripgrep-regexp (C-c r)
+- C-x p projectile-switch-open-project (switch to only open projects)
+  C-x P projectile-switch-project (switch to known projects)
+
+* [2017-10-24 Tue]
+
+- Meaningful C-x and C-c prefixes
+  C-x for major-mode commands, C-c for minor-modes
+  See
+  https://github.com/icylisper/emacs-tangled/blob/master/emacs-init.org#keybindings
+- Added switch-window
+  C-x o shows numbered windows to switch to
+- Added configuration for magit-repositories-list
+  C-x l lists all repositores you have configured and their git
+  statuses (see screenshot)
+- helm-git-grep defaults to using ripgrep
+  C-c g
+- org-cliplink for managing bookmarks in emacs instead of effing browsers
+- pdf-tools without cask
