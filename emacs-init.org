@@ -1363,18 +1363,25 @@ Various file formats and extensions
 (el-get-bundle eww-lnum)
 (el-get-bundle ace-link)
 (use-package eww
-  :bind
+  :preface
+   (defun eww-toggle-image ()
+     (interactive)
+     (setq shr-inhibit-images (not shr-inhibit-images))
+     (eww-reload)
+     (message "Image is now %s"
+	      (if shr-inhibit-images "off" "on")))
+   :bind
   (:map eww-mode-map
-   ("C-x g" . eww)
-   ("C-x G" . eww-browse-with-external-browser)
-   ("s-h" . eww-list-histories))
+	("s-h" . eww-list-histories)
+	("M" . eww-toggle-imae))
   :config
-  (setq  eww-search-prefix  "https://www.google.com/search?q="
+  (setq  eww-search-prefix  "https://duckduckgo.com/html/?q="
 	 eww-download-directory "~/downloads"
 	 eww-form-checkbox-symbol "[ ]"
 	 eww-form-checkbox-selected-symbol "[X]"
 	 shr-color-visible-luminance-min 80)
-    (add-hook 'eww-mode 'ace-link-mode))
+  (bind-key "C-x a" 'eww)
+  (add-hook 'eww-mode 'ace-link-mode))
 
 (use-package eww-lnum
   :bind (:map eww-mode-map
