@@ -50,6 +50,7 @@ C-c for buffer or project-local commands
 | C-c m | magit-status                     |
 | C-c n | cider-find-ns                    |
 | C-c o | magit-checkout                   |
+| C-c r | ripgrep-regexp                   |
 | C-c t | projectile-run-shell             |
 | C-c ! | projectile-run-command-in-root   |
 
@@ -1108,6 +1109,7 @@ Various file formats and extensions
 (el-get-bundle helm-rg)
 (use-package helm-rg
   :config
+  (bind-key (kbd "C-c r") 'ripgrep-regexp)
   (bind-key (kbd "C-c g") 'helm-projectile-rg))
 #+END_SRC
 ** wgrep
@@ -1373,7 +1375,8 @@ Various file formats and extensions
    :bind
   (:map eww-mode-map
 	("s-h" . eww-list-histories)
-	("M" . eww-toggle-imae))
+	("M" . eww-toggle-image)
+	("o" . ace-link-eww))
   :config
   (setq  eww-search-prefix  "https://duckduckgo.com/html/?q="
 	 eww-download-directory "~/downloads"
@@ -1484,7 +1487,7 @@ Various file formats and extensions
     :keybinding "c")
   (defengine google
     "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-    :browser 'browse-url-generic
+    :browser 'eww-browse-url
     :keybinding "g")
   (defengine duckduckgo
     "https://duckduckgo.com/?q=%s"
