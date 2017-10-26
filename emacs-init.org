@@ -839,7 +839,9 @@ Various file formats and extensions
 (use-package battery
   :config
   (display-battery-mode))
-#+END_SRC
+#+END
+
+(el-get-invalidate-autoloads)
 * org
 ** org-mode
 - author
@@ -1496,11 +1498,11 @@ Various file formats and extensions
   (defengine wikipedia
     "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
     :keybinding "w"
-    :browser 'browse-url-generic)
+    :browser 'eww-browse-url)
   (defengine youtube
     "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
     :keybinding "y"
-    :browser 'browse-url-generic))
+    :browser 'eww-browse-url))
 #+END_SRC
 ** jabber
 #+BEGIN_SRC emacs-lisp :tangle yes
