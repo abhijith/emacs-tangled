@@ -238,7 +238,7 @@ Workspaces using perspective
   (bind-key [s-right] 'persp-next)
   (bind-key [s-left] 'persp-prev))
 #+END_SRC
-* window
+* appearance
 ** no-bells-and-whistles
 Disable all fancy windowing components
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -276,6 +276,8 @@ Disable all fancy windowing components
     (load-theme 'charcoal-black t)))
  (t (load-theme 'dusk t)))
 #+END_SRC
+*
+* window
 ** ace-window
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle ace-window)
