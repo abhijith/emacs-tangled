@@ -12,6 +12,12 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 | shift up/down    | windmove up/down    |
 | hyper left/righ  | persp left/right    |
 
+help commands
+| C-h a | helm-apropos        |
+| C-h b | helm-descbinds      |
+| C-h p | helm-locate-library |
+| C-h i | info                |
+
 C-x to switch major modes
 
 | C-x a | eww                            |
@@ -200,7 +206,7 @@ Specific Key modifiers.
 	  "\\*scratch"
 	  "\\*Mini")))
 #+END_SRC
-** TODO info
+** info
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-info
   :config
@@ -208,7 +214,6 @@ Specific Key modifiers.
 #+END_SRC
 ** guide-key
 #+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle emacs-helm/helm-descbinds)
 (el-get-bundle guide-key)
 (use-package guide-key
   :init (guide-key-mode 1)
@@ -218,7 +223,7 @@ Specific Key modifiers.
     (setq guide-key/recursive-key-sequence-flag t)
     (setq guide-key/popup-window-position 'bottom)
     (setq guide-key/guide-key-sequence
-          `("C-c" "C-x" "C-M" "C-c p" "C-h"))))
+          `("C-c" "C-x" "C-M" "C-c p" "C-h" "C-c C-x"))))
 #+END_SRC
 * workspace
 ** perspective
@@ -770,17 +775,10 @@ Various file formats and extensions
   (add-hook 'racket-repl-mode-hook #'enable-paredit-mode)
   (add-hook 'racket-repl-mode-hook 'rainbow-delimiters-mode))
 #+END_SRC
-** emacs-lisp
+** elisp
+*** elisp-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package emacs-lisp-mode
-  :init
-  (progn
-    (use-package eldoc
-      :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
-    (use-package macrostep
-      :bind ("C-c e" . macrostep-expand))
-    (use-package ert
-      :config (add-to-list 'emacs-lisp-mode-hook 'ert--activate-font-lock-keywords)))
+(use-package elisp-mode
   :config
   (progn
     (setq tab-always-indent 'complete)
@@ -788,6 +786,25 @@ Various file formats and extensions
   :bind (("M-." . find-function-at-point)
          ("M-&" . complete-symbol))
   :interpreter (("emacs" . emacs-lisp-mode)))
+#+END_SRC
+*** eldoc
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eldoc
+  :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
+#+END_SRC
+*** ert
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ert
+  :config
+  (add-to-list 'emacs-lisp-mode-hook 'ert--activate-font-lock-keywords))
+#+END_SRC
+*** helm-elisp
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle emacs-helm/helm-descbinds)
+(use-package helm-elisp
+  :bind (("C-h a" . helm-apropos)
+	 ("C-h b" . helm-descbinds)
+	 ("C-h p" . helm-locate-library)))
 #+END_SRC
 * media
 ** emms
