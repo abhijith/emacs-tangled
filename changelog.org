@@ -1,3 +1,7 @@
+* [2017-10-29 Sun]
+- Add ace-jump-mode and bind it to C-c x
+- Use ace-window instead of switch-window
+
 * [2017-10-25 Wed]
 - Added exwm (the emacs window manager) - bleeding branch
 - Add zygospore (restore C-x 1)
