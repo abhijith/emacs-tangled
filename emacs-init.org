@@ -1065,6 +1065,13 @@ Various file formats and extensions
   :config
   (bind-key (kbd "C-x L") 'org-cliplink))
 #+END_SRC
+** org-magit
+** org-mind-map
+** org-json
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle org-json)
+
+#+END_SRC
 * project
 ** vc
 #+BEGIN_SRC emacs-lisp :tangle yes
