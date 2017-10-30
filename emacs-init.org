@@ -200,8 +200,7 @@ Specific Key modifiers.
 	  "\\*scratch"
 	  "\\*Mini")))
 #+END_SRC
-
-** info
+** TODO info
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-info
   :config
@@ -359,7 +358,7 @@ Disable all fancy windowing components
   :init
   (autoload 'ace-jum-mode "ace-jump-mode" "Emacs quick move" t)
   (bind-key (kbd "C-c x") 'ace-jump-mode))
-+END_SRC
+#+END_SRC
 ** swoop
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle helm-swoop)
@@ -537,6 +536,7 @@ Various file formats and extensions
   :config
   (setq-default pdf-view-display-size 'fit-page)
   (add-hook 'pdf-view-mode-hook #'pdf-view-fit-page-to-window)
+  (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
   (setq-default pdf-view-display-size 'fit-page)
   (setq pdf-view-resize-factor 1.10
 	doc-view-resolution 200))
