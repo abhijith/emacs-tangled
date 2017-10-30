@@ -51,6 +51,7 @@ C-c for buffer or project-local commands
 | C-c n | cider-find-ns                    |
 | C-c o | magit-checkout                   |
 | C-c r | ripgrep-regexp                   |
+| C-c x | ace-jump-mode                    |
 | C-c t | projectile-run-shell             |
 | C-c ! | projectile-run-command-in-root   |
 
@@ -358,12 +359,19 @@ Disable all fancy windowing components
 (el-get-bundle highline)
 (global-set-key (kbd "C-h C-i") 'highline-mode)
 #+END_SRC
+** ace-jump-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle ace-jump-mode)
+(use-package ace-jump-mode
+  :init
+  (autoload 'ace-jum-mode "ace-jump-mode" "Emacs quick move" t)
+  (bind-key (kbd "C-c x") 'ace-jump-mode))
++END_SRC
 ** swoop
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle helm-swoop)
 (use-package helm-swoop
-  :init
-  (bind-key "C-c s" 'helm-swoop))
+  :bind (("C-c s" . helm-swoop)))
 #+END_SRC
 ** swap-buffers
 #+BEGIN_SRC emacs-lisp :tangle yes
