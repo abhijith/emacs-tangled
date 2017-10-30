@@ -49,7 +49,9 @@ C-c for buffer or project-local commands
 | C-c f | helm-projectile-find-file        |
 | C-c F | sudo-find-file                   |
 | C-c g | helm-projectile-rg               |
-| C-c j | helm-imenu                       |
+| C-c i | helm-imenu                       |
+| C-c I | helm-imenu-in-all-buffers        |
+| C-c j | ace-jump-mode                    |
 | C-c k | helm-show-kill-ring              |
 | C-c l | magit-log-buffer-file            |
 | C-c L | magit-log-head                   |
@@ -57,9 +59,16 @@ C-c for buffer or project-local commands
 | C-c n | cider-find-ns                    |
 | C-c o | magit-checkout                   |
 | C-c r | ripgrep-regexp                   |
-| C-c x | ace-jump-mode                    |
 | C-c t | projectile-run-shell             |
 | C-c ! | projectile-run-command-in-root   |
+
+C-x c prefix commands (os-specific)
+
+| C-x c m | helm-man-woman            |
+| C-x c / | helm-find                 |
+| C-x c p | helm-list-emacs-processes |
+| C-x c I | helm-imenu-in-all-buffers |
+| C-x c l | helm-locate               |
 
 * dependencies
   #+BEGIN_SRC sh
@@ -157,16 +166,10 @@ Specific Key modifiers.
   (create-file-buffer "*helm*")
   (helm-autoresize-mode 1)
   :config
-  (add-hook 'helm-buffer-mode-hook #'(lambda () (interactive) (highline-mode 1)))
   (setq helm-mode-fuzzy-match t
 	helm-semantic-fuzzy-match t
-	helm-imenu-fuzzy-match t
-	helm-buffers-fuzzy-matching t
 	helm-recentf-fuzzy-match  nil
 	helm-echo-input-in-header-line nil
-	helm-mini-default-sources '(helm-source-buffers-list
-				    ,(if (projectile-project-p)
-					     helm-source-projectile-files-list))
 	helm-bookmark-show-location nil
 	helm-echo-input-in-header-line nil
 	helm-ff-file-name-history-use-recentf nil
@@ -175,36 +178,7 @@ Specific Key modifiers.
 	helm-autoresize-min-height 20
 	helm-split-window-in-side-p t
 	helm-split-window-default-side 'below
-	helm-display-header-line nil)
-  :bind (("C-c j" . helm-imenu)
-	 ("C-x b" . helm-mini)))
-
-(defun filter-dired-buffers (buffer-list)
-  (delq nil (mapcar
-             (lambda (buffer)
-               (if (eq (with-current-buffer buffer major-mode)  'dired-mode)
-                   nil
-                 buffer))
-             buffer-list)))
-(advice-add 'helm-skip-boring-buffers :filter-return 'filter-dired-buffers)
-
-(with-eval-after-load 'helm-buffers
-  (setq helm-boring-buffer-regexp-list
-	'("*!dired"
-	  "\\*helm-mode-switch-to-buffer*"
-	  "\\*Backtrace"
-	  "\\*Completions"
-	  "\\*Help"
-	  "\\*Shell Command Output"
-	  "\\*Flycheck error message"
-	  "\\*Compile-Log"
-	  "\\*magit"
-	  "\\*guide"
-	  "\\*helm"
-	  "\\*Echo"
-	  "\\*code"
-	  "\\*scratch"
-	  "\\*Mini")))
+	helm-display-header-line nil))
 #+END_SRC
 ** info
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -310,7 +284,7 @@ Disable all fancy windowing components
   (bind-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 #+END_SRC
 * buffer
-** defaults
+** sane-defaults
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq fill-column 80
       next-line-add-newlines nil
@@ -362,9 +336,9 @@ Disable all fancy windowing components
 (use-package ace-jump-mode
   :init
   (autoload 'ace-jum-mode "ace-jump-mode" "Emacs quick move" t)
-  (bind-key (kbd "C-c x") 'ace-jump-mode))
+  (bind-key (kbd "C-c j") 'ace-jump-mode))
 #+END_SRC
-** swoop
+** helm-swoop
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle helm-swoop)
 (use-package helm-swoop
@@ -399,10 +373,59 @@ Disable all fancy windowing components
   (interactive)
   (indent-region (point-min) (point-max)))
 #+END_SRC
-** minibuffer
+** helm-ring
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-ring
+  :bind
+  (("C-c y"   . helm-show-kill-ring)))
+#+END_SRC
+** imenu
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-imenu
+  :config
+  (setq helm-imenu-fuzzy-match t)
+  :bind (("C-c i" . helm-imenu)
+	 ("C-c I" . helm-imenu-in-all-buffers)))
+#+END_SRC
+** helm-buffers
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-buffers
+  :init
+  :bind (("C-x b" . helm-mini))
+  :config
+  (add-hook 'helm-buffer-mode-hook #'(lambda () (interactive) (highline-mode 1)))
+  (setq helm-buffers-fuzzy-matching t
+	helm-mini-default-sources '(helm-source-buffers-list
+				    ,(if (projectile-project-p)
+					 helm-source-projectile-files-list)))
+  (setq helm-boring-buffer-regexp-list
+	'("*!dired"
+	  "\\*helm-mode-switch-to-buffer*"
+	  "\\*Backtrace"
+	  "\\*Completions"
+	  "\\*Help"
+	  "\\*Shell Command Output"
+	  "\\*Flycheck error message"
+	  "\\*Compile-Log"
+	  "\\*magit"
+	  "\\*guide"
+	  "\\*helm"
+	  "\\*Echo"
+	  "\\*code"
+	  "\\*scratch"
+	  "\\*Mini"))
+  (defun filter-dired-buffers (buffer-list)
+    (delq nil (mapcar
+	       (lambda (buffer)
+		 (if (eq (with-current-buffer buffer major-mode)  'dired-mode)
+		     nil
+		   buffer))
+	       buffer-list)))
+  (advice-add 'helm-skip-boring-buffers :filter-return 'filter-dired-buffers))
+#+END_SRC
+** smex
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle smex)
-
 (defun smex-update-after-load (unused)
   (when (boundp 'smex-cache)
     (smex-update)))
@@ -416,12 +439,6 @@ Disable all fancy windowing components
 (define-key minibuffer-local-completion-map '[spc] 'minibuffer-complete-word)
 (define-key minibuffer-local-must-match-map '[tab] 'minibuffer-complete)
 (define-key minibuffer-local-must-match-map '[spc] 'minibuffer-complete-word)
-#+END_SRC
-** helm-ring
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package helm-ring
-  :bind
-  (("C-c y"   . helm-show-kill-ring)))
 #+END_SRC
 * dired
 ** wdired
