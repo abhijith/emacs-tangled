@@ -86,6 +86,7 @@
  `(elfeed-search-feed-face ((t (:foreground "cyan"))))
  `(elfeed-search-title-face ((t (:foreground "grey50"))))
  `(elfeed-search-unread-title-face ((t (:foreground "pale green"))))
+ '(anzu-mode-line ((t (:foreground "black"))))
  '(erc-action-face ((t (nil))))
  '(erc-bold-face ((t (:bold t :weight bold))))
  '(erc-default-face ((t (nil))))

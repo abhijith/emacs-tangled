@@ -338,12 +338,6 @@ Disable all fancy windowing components
   (autoload 'ace-jum-mode "ace-jump-mode" "Emacs quick move" t)
   (bind-key (kbd "C-c j") 'ace-jump-mode))
 #+END_SRC
-** helm-swoop
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle helm-swoop)
-(use-package helm-swoop
-  :bind (("C-c s" . helm-swoop)))
-#+END_SRC
 ** swap-buffers
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defun swap-buffers ()
@@ -373,19 +367,17 @@ Disable all fancy windowing components
   (interactive)
   (indent-region (point-min) (point-max)))
 #+END_SRC
+** helm-swoop
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm-swoop)
+(use-package helm-swoop
+  :bind (("C-c s" . helm-swoop)))
+#+END_SRC
 ** helm-ring
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-ring
   :bind
   (("C-c y"   . helm-show-kill-ring)))
-#+END_SRC
-** imenu
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package helm-imenu
-  :config
-  (setq helm-imenu-fuzzy-match t)
-  :bind (("C-c i" . helm-imenu)
-	 ("C-c I" . helm-imenu-in-all-buffers)))
 #+END_SRC
 ** helm-buffers
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -422,6 +414,21 @@ Disable all fancy windowing components
 		   buffer))
 	       buffer-list)))
   (advice-add 'helm-skip-boring-buffers :filter-return 'filter-dired-buffers))
+#+END_SRC
+** imenu
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-imenu
+  :config
+  (setq helm-imenu-fuzzy-match t)
+  :bind (("C-c i" . helm-imenu)
+	 ("C-c I" . helm-imenu-in-all-buffers)))
+#+END_SRC
+** anzu
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle anzu)
+(use-package anzu
+  :config
+  (global-anzu-mode +1))
 #+END_SRC
 ** smex
 #+BEGIN_SRC emacs-lisp :tangle yes
