@@ -305,7 +305,7 @@ Disable all fancy windowing components
   (bind-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 #+END_SRC
 * buffer
-** prog-defaults
+** defaults
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq fill-column 80
       next-line-add-newlines nil
