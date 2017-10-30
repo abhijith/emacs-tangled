@@ -390,7 +390,8 @@ Disable all fancy windowing components
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle crux)
 (use-package crux
-  :bind (("C-a" . crux-move-beginning-of-line)))
+  :bind (("C-a" . crux-move-beginning-of-line)
+	 ("C-^" . crux-top-join-line)))
 #+END_SRC
 ** indent-buffer
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -804,6 +805,7 @@ Various file formats and extensions
 (use-package helm-elisp
   :bind (("C-h a" . helm-apropos)
 	 ("C-h b" . helm-descbinds)
+	 ("C-h c" . helm-complex-command-history)
 	 ("C-h p" . helm-locate-library)))
 #+END_SRC
 * media
@@ -877,6 +879,7 @@ Various file formats and extensions
   | C-c C-c   | org-ctrl-c-ctrl-c    |
   | M-ret     | new-list-item        |
   | M-S-ret   | new-checkbox-item    |
+  | C-c *     | org-ctrl-c-star      |
   | C-c -     | cycle-item           |
   | C-c /     | org-sparse-tree      |
   | C-c C-l   | org-insert-link      |
@@ -909,6 +912,7 @@ Various file formats and extensions
   :config
   (bind-key "C-c a" 'org-agenda)
   (bind-key "C-c c" 'org-capture)
+  (bind-key "C-c C" 'helm-org-capture-templates)
   (progn
     (setq org-directory "~/src/org"
 	  org-mode-file-dir "~/src/org")
