@@ -1154,7 +1154,6 @@ Various file formats and extensions
   :bind (("C-c f" . helm-projectile-find-file)
   	 ("C-c D" . projectile-dired)
          ("C-c !" . projectile-run-command-in-root)
-	 ("C-c RET" . projectile-run-shell)
 	 ("C-c t" . projectile-run-shell)
 	 ("C-x RET" . projectile-run-shell)
   	 ("C-c b" . helm-projectile-switch-to-buffer)
@@ -1259,26 +1258,23 @@ Various file formats and extensions
 *** git-link
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle git-link)
+(use-package git-link
+  :preface
+  (defun github-page ()
+    (interactive)
+    (let ((git-link-open-in-browser t))
+      (git-link-homepage "origin")))
+  :bind (("C-c x g" . github-page)))
 #+END_SRC
 *** helm-open-github
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle helm-open-github)
-
-(defun hogc ()
-  (interactive)
-  (let ((browse-url-browser-function 'browse-url-generic)
-	(browse-url-generic-program "firefox"))
-    (helm-open-github-from-commit)))
-
 (use-package helm-open-github
   :config
   (setq helm-open-github-commit-limit 20)
-  :bind (("C-c x c" . hogc)
-	 ("C-c x i" . helm-open-github-from-issues)))
-#+END_SRC
-*** github-clone
-#+BEGIN_SRC emacs-lisp :tangle yes
-(el-get-bundle github-clone)
+  :bind (("C-c x c" . helm-open-github-from-commit)
+	 ("C-c x i" . helm-open-github-from-issues)
+	 ("C-c x p" . helm-open-github-from-pull-requests)))
 #+END_SRC
 *** gist
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1289,6 +1285,13 @@ Various file formats and extensions
   (defun send-to-gist (answer)
     (interactive "cSend region to Gist?: (y/n) ")
     (if (equal answer ?\y) (gist-region (region-beginning) (region-end)))))
+#+END_SRC
+*** copy-as-format
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle copy-as-format)
+(use-package copy-as-format
+  :bind (("C-c x s" . copy-as-format-slack)
+	 ("C-c x f" . copy-as-format-github)))
 #+END_SRC
 * rust
 ** rust-mode
@@ -1448,19 +1451,23 @@ Various file formats and extensions
      (eww-reload)
      (message "Image is now %s"
 	      (if shr-inhibit-images "off" "on")))
+   (defun eww-browse-url-at-point ()
+     (interactive)
+     (let ((browse-url-browser-function 'eww-browse-url))
+       (browse-url-at-point)))
    :bind
-  (:map eww-mode-map
-	("s-h" . eww-list-histories)
-	("M" . eww-toggle-image)
-	("o" . ace-link-eww))
-  :config
-  (setq  eww-search-prefix  "https://duckduckgo.com/html/?q="
-	 eww-download-directory "~/downloads"
-	 eww-form-checkbox-symbol "[ ]"
-	 eww-form-checkbox-selected-symbol "[X]"
-	 shr-color-visible-luminance-min 80)
-  (bind-key "C-x a" 'eww)
-  (add-hook 'eww-mode 'ace-link-mode))
+   (:map eww-mode-map
+	 ("s-h" . eww-list-histories)
+	 ("M" . eww-toggle-image)
+	 ("o" . ace-link-eww))
+   :config
+   (setq  eww-search-prefix  "https://duckduckgo.com/html/?q="
+	  eww-download-directory "~/downloads"
+	  eww-form-checkbox-symbol "[ ]"
+	  eww-form-checkbox-selected-symbol "[X]"
+	  shr-color-visible-luminance-min 80)
+   (bind-key (kbd "C-c RET") 'eww-browse-url-at-point)
+   (add-hook 'eww-mode 'ace-link-mode))
 
 (use-package eww-lnum
   :bind (:map eww-mode-map
@@ -1550,7 +1557,8 @@ Various file formats and extensions
 ** engine-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle engine-mode)
-(setq browse-url-browser-function 'eww-browse-url)
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox")
 (use-package engine-mode
   :init
   (require 'engine-mode)

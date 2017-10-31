@@ -1,0 +1,4 @@
+(:name copy-as-format
+       :website "https://github.com/sshaw/copy-as-format"
+       :type github
+       :pkgname "sshaw/copy-as-format")
