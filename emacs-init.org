@@ -1,6 +1,6 @@
 -*- coding: utf-8 -*-
 
-#+AUTHOR: icylisper
+#+AUTHOR: icylisper and Abhijith
 #+TITLE: Tangled Emacs Configuration
 
 * about
