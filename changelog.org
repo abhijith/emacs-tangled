@@ -1,7 +1,13 @@
+* [2017-10-30 Mon]
+- Add anzu (modeline isearch count)
+- github utilities
+  - git-link
+  - helm-open-github (open commit, PR or issue)
+  - gist
+  - copy-as-format (for pasting code blocks)
 * [2017-10-29 Sun]
 - Add ace-jump-mode and bind it to C-c x
 - Use ace-window instead of switch-window
-
 * [2017-10-25 Wed]
 - Added exwm (the emacs window manager) - bleeding branch
 - Add zygospore (restore C-x 1)
@@ -10,7 +16,6 @@
 - Add ripgrep-regexp (C-c r)
 - C-x p projectile-switch-open-project (switch to only open projects)
   C-x P projectile-switch-project (switch to known projects)
-
 * [2017-10-24 Tue]
 
 - Meaningful C-x and C-c prefixes
