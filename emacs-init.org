@@ -41,26 +41,28 @@ C-x to switch major modes
 
 C-c for buffer or project-local commands
 
-| C-c a | org-agenda                       |
-| C-c b | helm-projectile-switch-to-buffer |
-| C-c c | org-capture                      |
-| C-c d | magit-diff                       |
-| C-c D | projectile-dired                 |
-| C-c f | helm-projectile-find-file        |
-| C-c F | sudo-find-file                   |
-| C-c g | helm-projectile-rg               |
-| C-c i | helm-imenu                       |
-| C-c I | helm-imenu-in-all-buffers        |
-| C-c j | ace-jump-mode                    |
-| C-c k | helm-show-kill-ring              |
-| C-c l | magit-log-buffer-file            |
-| C-c L | magit-log-head                   |
-| C-c m | magit-status                     |
-| C-c n | cider-find-ns                    |
-| C-c o | magit-checkout                   |
-| C-c r | ripgrep-regexp                   |
-| C-c t | projectile-run-shell             |
-| C-c ! | projectile-run-command-in-root   |
+| C-c a   | org-agenda                       |
+| C-c b   | helm-projectile-switch-to-buffer |
+| C-c c   | org-capture                      |
+| C-c d   | magit-diff                       |
+| C-c D   | projectile-dired                 |
+| C-c f   | helm-projectile-find-file        |
+| C-c F   | sudo-find-file                   |
+| C-c g   | helm-projectile-rg               |
+| C-c i   | helm-imenu                       |
+| C-c I   | helm-imenu-in-all-buffers        |
+| C-c j   | ace-jump-mode                    |
+| C-c k   | helm-show-kill-ring              |
+| C-c l   | magit-log-buffer-file            |
+| C-c L   | magit-log-head                   |
+| C-c m   | magit-status                     |
+| C-c n   | cider-find-ns                    |
+| C-c o   | magit-checkout                   |
+| C-c r   | ripgrep-regexp                   |
+| C-c t   | projectile-run-shell             |
+| C-c x   | github prefix                    |
+| C-c !   | projectile-run-command-in-root   |
+| C-c RET | eww-browse-at-point              |
 
 C-x c prefix commands (os-specific)
 
@@ -986,8 +988,6 @@ Various file formats and extensions
     (define-key org-agenda-mode-map [S-down]  'windmove-down)))
 #+END_SRC
 
-#+RESULTS:
-
 ** org-babel
 | C-c C-v   | org-bable prefix |
 | C-c C-v t | org-bable-tangle |
@@ -1190,6 +1190,7 @@ Various file formats and extensions
   (bind-key "C-c q" (ffip-create-pattern-file-finder "*.clj")))
 #+END_SRC
 ** git-modeline
+** git-timemachine
 ** magit
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle magit)
