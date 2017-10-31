@@ -37,6 +37,7 @@ C-x to switch major modes
 | C-x r | register                       |
 | C-x u | undo-tree (buffer-local)       |
 | C-x w | persp-switch                   |
+| C-x x | persp PREFIX                   |
 | C-x / | engine-mode                    |
 
 C-c for buffer or project-local commands
@@ -49,6 +50,7 @@ C-c for buffer or project-local commands
 | C-c f   | helm-projectile-find-file        |
 | C-c F   | sudo-find-file                   |
 | C-c g   | helm-projectile-rg               |
+| C-c h   | mark-whole-buffer                |
 | C-c i   | helm-imenu                       |
 | C-c I   | helm-imenu-in-all-buffers        |
 | C-c j   | ace-jump-mode                    |
@@ -60,7 +62,7 @@ C-c for buffer or project-local commands
 | C-c o   | magit-checkout                   |
 | C-c r   | ripgrep-regexp                   |
 | C-c t   | projectile-run-shell             |
-| C-c x   | github prefix                    |
+| C-c x   | github PREFIX                    |
 | C-c !   | projectile-run-command-in-root   |
 | C-c RET | eww-browse-at-point              |
 
@@ -686,9 +688,9 @@ Various file formats and extensions
 (setq prettify-symbols-unprettify-at-point t)
 #+END_SRC
 ** clojure-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle clojure-mode)
 (el-get-bundle edn)
-#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package clojure-mode
   :mode ("\\.edn$" "\\.clj[sx]?$" "Irminfile" "\\.boot$")
   :config
