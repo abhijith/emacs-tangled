@@ -1191,7 +1191,6 @@ Various file formats and extensions
   (bind-key "C-c q" (ffip-create-pattern-file-finder "*.clj")))
 #+END_SRC
 ** git-modeline
-** diff-hl
 ** magit
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle magit)
