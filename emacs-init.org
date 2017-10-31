@@ -1256,6 +1256,31 @@ Various file formats and extensions
   (add-hook 'magit-status-mode-hook 'magit-filenotify-mode))
 #+END_SRC
 ** github
+*** git-link
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle git-link)
+#+END_SRC
+*** helm-open-github
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle helm-open-github)
+
+(defun hogc ()
+  (interactive)
+  (let ((browse-url-browser-function 'browse-url-generic)
+	(browse-url-generic-program "firefox"))
+    (helm-open-github-from-commit)))
+
+(use-package helm-open-github
+  :config
+  (setq helm-open-github-commit-limit 20)
+  :bind (("C-c x c" . hogc)
+	 ("C-c x i" . helm-open-github-from-issues)))
+#+END_SRC
+*** github-clone
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle github-clone)
+#+END_SRC
+*** gist
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle gist)
 (use-package gist
@@ -1264,11 +1289,6 @@ Various file formats and extensions
   (defun send-to-gist (answer)
     (interactive "cSend region to Gist?: (y/n) ")
     (if (equal answer ?\y) (gist-region (region-beginning) (region-end)))))
-
-(el-get-bundle git-link)
-(el-get-bundle github-browse-file)
-(el-get-bundle github-clone)
-(el-get-bundle helm-open-github)
 #+END_SRC
 * rust
 ** rust-mode
