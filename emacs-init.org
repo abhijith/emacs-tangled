@@ -188,7 +188,7 @@ Specific Key modifiers.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-info
   :config
-  (bind-key (kbd "C-x i") 'helm-info))
+  (bind-key (kbd "C-h I") 'helm-info))
 #+END_SRC
 ** guide-key
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -674,14 +674,6 @@ Various file formats and extensions
 	slime-complete-symbol-function 'slime-fuzzy-complete-symbol
 	slime-startup-animation t))
 #+END_SRC
-** ielm
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ielm
-  :defer t
-  :config
-  (progn
-    (define-key ielm-map (kbd "C-c C-z") #'quit-window)))
-#+END_SRC
 ** pretty-symbols
 #+BEGIN_SRC emacs-lisp :tangle yes
 (global-prettify-symbols-mode 1)
@@ -835,6 +827,21 @@ Various file formats and extensions
 	 ("C-h b" . helm-descbinds)
 	 ("C-h c" . helm-complex-command-history)
 	 ("C-h p" . helm-locate-library)))
+#+END_SRC
+*** info
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-info
+  :config
+  (bind-key (kbd "C-h I") 'helm-info))
+#+END_SRC
+*** ielm
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ielm
+  :defer t
+  :config
+  (progn
+    (add-hook 'ielm-mode-hook (lambda () (paredit-mode 1)))
+    (define-key ielm-map (kbd "C-c C-z") #'quit-window)))
 #+END_SRC
 * media
 ** emms

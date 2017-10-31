@@ -10,4 +10,4 @@ smex-items
 cider.txt
 custom.el
 auto-save-list
-.cask/
+.cask
