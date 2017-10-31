@@ -16,6 +16,7 @@ help commands
 | C-h a | helm-apropos        |
 | C-h b | helm-descbinds      |
 | C-h p | helm-locate-library |
+| C-h I | helm-info           |
 | C-h i | info                |
 
 C-x to switch major modes
@@ -26,7 +27,7 @@ C-x to switch major modes
 | C-x d | dictionary-search              |
 | C-x f | switch-to-elfeed-buffer        |
 | C-x g | helm-org-rifle                 |
-| C-x i | helm-info                      |
+| C-x i | -                              |
 | C-x j | erc/slack/jabber selector      |
 | C-x k | kill-this-buffer               |
 | C-x l | magit-list-repositories        |
