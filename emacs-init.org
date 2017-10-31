@@ -1649,6 +1649,13 @@ Various file formats and extensions
   :mode ("\\.http\\'" . restclient-mode))
 #+END_SRC
  * secrets
+* math
+** calc
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package calc
+  :defer t
+  :config (setf calc-display-trail nil))
+#+END_SRC
 * load-secrets
 #+BEGIN_SRC emacs-lisp  :tangle yes
 (defun load-if-exists (file)
