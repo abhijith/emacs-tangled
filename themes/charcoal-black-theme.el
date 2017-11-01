@@ -175,7 +175,7 @@
  `(org-level-3 ((t (:foreground "grey"))))
  `(org-level-4 ((t (:foreground "grey"))))
  `(org-tag ((t (:foreground "dark cyan" :weight normal))))
- `(org-table ((t (:foreground "springgreen4"))))
+ `(org-table ((t (:foreground "#35f735"))))
  `(org-block ((t (:inherit fixed-pitch))))
  `(org-property ((t (:foreground "grey"))))
   `(persp-selected-face ((t (:foreground "cyan4" :bold t))))
