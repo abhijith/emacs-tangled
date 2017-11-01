@@ -1351,6 +1351,7 @@ Various file formats and extensions
 ** racer-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'exec-path "~/.cargo/bin")
+(el-get-bundle company-mode)
 (use-package racer
   :ensure t
   :config
