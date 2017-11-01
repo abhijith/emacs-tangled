@@ -444,7 +444,7 @@ Disable all fancy windowing components
 ** expand-region
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle expand-region)
-(use-package exapnd-region
+(use-package expand-region
   :config
   (bind-key (kbd "C-=") 'er/expand-region))
 #+END_SRC
