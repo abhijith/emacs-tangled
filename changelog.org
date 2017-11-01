@@ -1,3 +1,7 @@
+* [2017-10-31 Tue]
+- Add load-tangled-file command
+- Add org-download (screenshots from org-mode)
+- Add discover-my-major (discover major-mode keybindings)
 * [2017-10-30 Mon]
 - Add anzu (modeline isearch count)
 - github utilities
