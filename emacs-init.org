@@ -1125,7 +1125,13 @@ Various file formats and extensions
 ** org-json
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle org-json)
-
+#+END_SRC
+** org-download
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle org-download)
+(use-package org-download
+  :config
+  (setq-default org-download-image-dir "~/downloads"))
 #+END_SRC
 * project
 ** vc
