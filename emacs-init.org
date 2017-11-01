@@ -110,6 +110,10 @@ C-x c prefix commands (os-specific)
 (add-to-list 'el-get-recipe-path "~/.emacs.d/recipes")
 (add-to-list 'load-path "~/.emacs.d/el-get/elfeed")
 (el-get 'sync)
+
+(defun elget-reload ()
+  (interactive)
+  (el-get-invalidate-autoloads))
 #+END_SRC
 * libraries
 ** elisp-lib
@@ -908,8 +912,6 @@ Various file formats and extensions
   :config
   (display-battery-mode))
 #+END_SRC
-
-(el-get-invalidate-autoloads)
 * org
 ** org-mode
 - author
