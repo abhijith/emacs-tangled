@@ -15,6 +15,7 @@ generate a =emacs-init.el= from the =emacs-lisp= source blocks.
 help commands
 | C-h a | helm-apropos        |
 | C-h b | helm-descbinds      |
+| C-h d | discover-my-major   |
 | C-h p | helm-locate-library |
 | C-h I | helm-info           |
 | C-h i | info                |
@@ -203,6 +204,12 @@ Specific Key modifiers.
     (setq guide-key/popup-window-position 'bottom)
     (setq guide-key/guide-key-sequence
           `("C-c" "C-x" "C-M" "C-c p" "C-h" "C-c C-x"))))
+#+END_SRC
+** discover-major
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle discover-my-major)
+(use-package discover-my-major
+  :bind (("C-h d" . discover-my-major)))
 #+END_SRC
 * workspace
 ** perspective
