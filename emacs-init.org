@@ -86,6 +86,8 @@ C-x c prefix commands (os-specific)
    cargo install racer
    cargo install rustfmt
    cargo install ripgrep
+   sudo mkdir -p /usr/local/src/rust
+   sudo ln -sf $(rustc --print sysroot)/lib/rustlib/src/rust/src /usr/local/src/rust/src
   #+END_SRC
 * debugging
 #+BEGIN_SRC emacs-lisp :tangle yes
