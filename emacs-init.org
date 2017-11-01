@@ -1339,6 +1339,7 @@ Various file formats and extensions
 #+END_SRC
 ** cargo
 #+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'exec-path "~/.cargo/bin")
 (el-get-bundle cargo)
 (use-package cargo
   :config
@@ -1347,16 +1348,16 @@ Various file formats and extensions
 #+END_SRC
 ** racer-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(when (getenv "RUST_SRC_PATH")
-  (el-get-bundle rust-racer)
-  (el-get-bundle emacs-racer)
-  (use-package racer-mode
-    :config
-    (setq racer-rust-src-path (getenv "RUST_SRC_PATH"))
-    (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'racer-mode-hook #'flycheck-mode)
-    (add-hook 'racer-mode-hook #'eldoc-mode)
-    (add-hook 'racer-mode-hook #'cargo-minor-mode)))
+(add-to-list 'exec-path "~/.cargo/bin")
+(use-package racer
+  :ensure t
+  :config
+  (setq racer-rust-src-path (or (getenv "RUST_SRC_PATH") "/usr/local/src/rust/src"))
+  (add-hook 'rust-mode-hook  #'racer-mode)
+  (add-hook 'racer-mode-hook #'flycheck-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  (add-hook 'racer-mode-hook #'company-mode)
+  (add-hook 'racer-mode-hook #'cargo-minor-mode))
 #+END_SRC
 * system
 ** comint
