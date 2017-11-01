@@ -441,6 +441,13 @@ Disable all fancy windowing components
   :bind (("C-c i" . helm-imenu)
 	 ("C-c I" . helm-imenu-in-all-buffers)))
 #+END_SRC
+** expand-region
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle expand-region)
+(use-package exapnd-region
+  :config
+  (bind-key (kbd "C-=") 'er/expand-region))
+#+END_SRC
 ** anzu
 #+BEGIN_SRC emacs-lisp :tangle yes
 (el-get-bundle anzu)
