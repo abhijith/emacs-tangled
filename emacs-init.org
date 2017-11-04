@@ -53,9 +53,9 @@ C-c for buffer or project-local commands
 | C-c F   | sudo-find-file                   |
 | C-c g   | helm-projectile-rg               |
 | C-c h   | mark-whole-buffer                |
-| C-c i   | helm-imenu                       |
-| C-c I   | helm-imenu-in-all-buffers        |
-| C-c j   | ace-jump-mode                    |
+| C-c i   | ace-jump-mode                    |
+| C-c j   | helm-imenu                       |
+| C-c J   | helm-imenu-in-all-buffers        |
 | C-c k   | helm-show-kill-ring              |
 | C-c l   | magit-log-buffer-file            |
 | C-c L   | magit-log-head                   |
@@ -359,7 +359,7 @@ Disable all fancy windowing components
 (use-package ace-jump-mode
   :init
   (autoload 'ace-jum-mode "ace-jump-mode" "Emacs quick move" t)
-  (bind-key (kbd "C-c j") 'ace-jump-mode))
+  (bind-key (kbd "C-c i") 'ace-jump-mode))
 #+END_SRC
 ** swap-buffers
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -443,8 +443,8 @@ Disable all fancy windowing components
 (use-package helm-imenu
   :config
   (setq helm-imenu-fuzzy-match t)
-  :bind (("C-c i" . helm-imenu)
-	 ("C-c I" . helm-imenu-in-all-buffers)))
+  :bind (("C-c j" . helm-imenu)
+	 ("C-c j" . helm-imenu-in-all-buffers)))
 #+END_SRC
 ** expand-region
 #+BEGIN_SRC emacs-lisp :tangle yes
