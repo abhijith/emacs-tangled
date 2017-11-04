@@ -226,14 +226,19 @@ Workspaces using perspective
   :init
   (persp-mode)
   :config
+  (with-eval-after-load "persp-mode"
+    (substitute-key-definition #'switch-to-buffer #'persp-switch-to-buffer global-map)
+    (substitute-key-definition #'kill-buffer #'persp-kill-buffer global-map))
   (setq persp-modestring-dividers '("(" ")" "|")
-	persp-mode-prefix-key (kbd "s-x"))
+	persp-mode-prefix-key (kbd "s-x")
+	persp-autokill-buffer-on-remove 'kill-weak)
   (if (eq window-system 'x)
       (shell-command "xmodmap -e 'clear Lock' -e 'keycode 66 = F13'"))
   (bind-key [f13] 'persp-switch)
   (bind-key "C-x w" 'persp-switch)
   (bind-key [s-right] 'persp-next)
   (bind-key [s-left] 'persp-prev))
+
 #+END_SRC
 * appearance
 ** no-bells-and-whistles
@@ -320,7 +325,7 @@ Disable all fancy windowing components
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
+;;(global-set-key (kbd "C-x k") 'kill-this-buffer)
 #+END_SRC
 ** undo-tree
 #+BEGIN_SRC emacs-lisp :tangle yes
