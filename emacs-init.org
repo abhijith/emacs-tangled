@@ -1376,6 +1376,50 @@ Various file formats and extensions
   (add-hook 'racer-mode-hook #'company-mode)
   (add-hook 'racer-mode-hook #'cargo-minor-mode))
 #+END_SRC
+* go
+** go-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle go-mode)
+(el-get-bundle go-eldoc)
+(use-package go-mode
+  :mode ("\\.go$" . go-mode)
+  :preface
+  (defun my-hooks ()
+    (add-hook 'before-save-hook #'gofmt-before-save))
+  :config
+  (add-hook 'go-mode-hook #'my-hooks)
+  (setq gofmt-command "goimports"))
+#+END_SRC
+** go-eldoc
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle go-eldoc)
+:config
+(progn
+  (add-hook 'go-mode-hook #'go-eldoc-setup)
+  (setq eldoc-idle-delay 0.2)
+  (set-face-attribute 'eldoc-highlight-function-argument nil
+		      :underline t :foreground "SteelBlue"
+		      :weight 'normal))
+#+END_SRC
+** go-def
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle go-def)
+(use-package go-def
+  :bind (("M-.") . godef-jump))
+#+END_SRC
+** go-autocomplete
+#+BEGIN_SRC emacs-lisp :tangle yes
+(el-get-bundle go-autocomplete)
+(use-package go-autocomplete
+  :preface
+  (defun hook ()
+    (auto-complete-mode 1))
+  :config
+  (progn
+    (add-hook 'go-mode-hook #'hook)
+    (ac-config-default))
+#+END_SRC
+
 * system
 ** comint
 #+BEGIN_SRC emacs-lisp :tangle yes
