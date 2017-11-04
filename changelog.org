@@ -1,3 +1,7 @@
+* [2017-11-04 Sat]
+- Add org-contacts
+- Add mixed-pitch-mode
+- Use persp kill and switch
 * [2017-10-31 Tue]
 - Add load-tangled-file command
 - Add org-download (screenshots from org-mode)
