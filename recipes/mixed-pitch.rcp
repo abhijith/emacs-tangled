@@ -1,0 +1,4 @@
+(:name mixed-pitch
+       :website "https://github.com/jabranham/mixed-pitch"
+       :type github
+       :pkgname "jabranham/mixed-pitch")

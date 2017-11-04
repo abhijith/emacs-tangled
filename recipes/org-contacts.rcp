@@ -1,0 +1,4 @@
+(:name org-contacts
+       :description "org-contacts"
+       :type http
+       :url "http://orgmode.org/w/?p=org-mode.git;a=blob_plain;f=contrib/lisp/org-contacts.el")
